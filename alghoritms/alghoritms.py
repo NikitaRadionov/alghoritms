@@ -111,11 +111,36 @@ def strFind_naive(pattern:str, text:str)->int:
 
 
 # maths algorithms
-def horners_rule(a, x):
+def horners_rule(a:list, x:int) -> int:
+    """Horner's rule
+       Calculation of the polynomial value at point x
+       The polynomial is represented in this form:
+       A(x) = a[0] + x * (a[1] + x * (a[2] + ... + x * (a[n-2] + x * (a[n-1]))...))
+       This form allows you to efficiently calculate the value of a polynomial at a given point
 
-    return None
+       Complexity: θ(n)
+
+    Args:
+        a (list): iterable (may be list, tuple, ...)
+        x (int): point
+
+    Raises:
+        ValueError: _description_
+
+    Returns:
+        int: value in point x
+    """
+    n = len(a)
+    if n != 0:
+        sum = 0
+        for i in range(n-1, -1, -1):
+            sum = a[i] + sum*x
+        return sum
+    else:
+        raise ValueError
 
 
+# maths polynom
 class Poly:
 
     def __init__(self, *args):
@@ -342,9 +367,13 @@ class QuadraticPolynomial(Poly):
                 return []
 
 
-__all__ = ["bubleSort", "bubleSort_optimized", "strFind_naive"]
+__all__ = ["bubleSort", "bubleSort_optimized", "horners_rule", "strFind_naive", "Poly", "QuadraticPolynomial"]
 
 if __name__ == "__main__":
-    print("Hi")
-    a = Poly(1,2,3,4)
-    print(a)
+    # print("Hi")
+    # a = Poly(1,2,3,4)
+    # print(a)
+    a = [1,2,3]
+    print(horners_rule(a, 0))
+    print(horners_rule(a, 1))
+    print(horners_rule(a, 2))
