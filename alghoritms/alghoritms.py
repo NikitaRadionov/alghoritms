@@ -2,9 +2,12 @@ import time
 
 def bubleSort(lst:list, reverse=False, copy=True)->list:
     """
-        Buble sort. Naive realisation. Complexity O(n^2)
+        Buble sort. Naive realisation.
         Ascending sort by default.
         Set reverse=True, if you want descending order
+
+        Complexity: O(n^2)
+
         Default using:
         a = [2,1,5,3,9,10,3,5,4]
         a = bubleSort(a)
@@ -36,9 +39,12 @@ def bubleSort(lst:list, reverse=False, copy=True)->list:
 
 def bubleSort_optimized(lst:list, reverse=False, copy=True)->list:
     """
-        Buble sort. Optimized realisation. Complexity O(n^2)
+        Buble sort. Optimized realisation.
         Ascending sort by default.
         Set reverse=True, if you want descending order
+
+        Complexity: O(n^2)
+
         Default using:
         a = [2,1,5,3,9,10,3,5,4]
         a = bubleSort(a)
@@ -73,7 +79,35 @@ def bubleSort_optimized(lst:list, reverse=False, copy=True)->list:
         j += 1
     return a
 
-__all__ = ["bubleSort"]
+def strFind_naive(pattern:str, text:str)->int:
+    """This is naive realisation algorithm
+       for finding a substring in a string
+
+       Complexity: O((n-m+1)m)
+
+    Args:
+        pattern (str): pattern
+        text (str): text for finding matches
+
+    Returns:
+        int: count of matches
+    """
+    s = 0
+    m = len(pattern)
+    n = len(text)
+    for i in range(n-m+1):
+        j = 0
+        flag = True
+        while flag and j < m:
+            if text[i+j] != pattern[j]:
+                flag = False
+            j += 1
+        if flag:
+            s += 1
+    return s
+
+
+__all__ = ["bubleSort", "bubleSort_optimized", "strFind_naive"]
 
 if __name__ == "__main__":
-    a = [2,1,5,3,9,10,4,5,3,2,1,5,8,23,7,0,54,21,43,12,23,1,2,3,4,9,5,2,1,5,2,0,32,54,1,45,78,12,32,93,76,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,11,1,1,11,1,1,1,11,1,11,1,1,11,1,11,1,11,1,11,11,1]
+    print("Hi")
