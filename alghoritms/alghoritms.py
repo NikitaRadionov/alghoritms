@@ -1,6 +1,6 @@
 import time
 #maths
-def pow(a:int , n:int)->int:
+def pow(a:int , n:int)->float:
     """ Возводить в степень можно гораздо быстрее,
         чем за n умножений! Для этого
         нужно воспользоваться следующими
@@ -18,7 +18,7 @@ def pow(a:int , n:int)->int:
         n (int): degree
 
     Returns:
-        int: a ** n
+        float: a ** n
     """
     if n % 2 == 0:
         return (a**2)**(n/2)
@@ -395,7 +395,7 @@ def strFind_naive(pattern:str, text:str)->int:
     return s
 
 
-def strFind_RabinKarp(pattern:str, text:str)->int:
+def strFind_RabinKarp(pattern:str, text:str, q:int = 101, d:int = 256, table:dict = None)->int:
     """This is Rabin-Karp algorithm for
        finding a substring in a string
 
@@ -406,12 +406,68 @@ def strFind_RabinKarp(pattern:str, text:str)->int:
     Args:
         pattern (str): pattern
         text (str): text for finding matches
-
+        q (int): prime number. dq should fit into a computer word
+        d (int): alphabet power
+        table (dict): comparison table. It's must look like {'a': 0, 'b': 1, 'c': 2, ...}
     Returns:
         int: count of matches
     """
+    m = len(pattern)
+    n = len(text)
+    h = 1
+    p = 0
+    t = 0
+    count = 0
 
-    return None
+    # h = d^(m-1) mod q
+    for i in range(m-1):
+        h = (h * d) % q
+
+    if d == 256 and table is None:
+        # creating p and t_0
+        for i in range(m):
+            p = (ord(pattern[i]) + d * p) % q
+            t = (ord(text[i]) + d * t) % q
+
+        for s in range(n - m + 1):
+            if p == t:
+                j = 0
+                flag = True
+                while flag and j < m:
+                    if text[s+j] != pattern[j]:
+                        flag = False
+                    j += 1
+                if flag:
+                    count += 1
+            if s < n - m:
+                # getting t_s+1 throught t_s
+                t = (d * (t - h * ord(text[s])) + ord(text[s + m])) % q
+                if t < 0:
+                    t = t + q
+        return count
+    else:
+        # creating p and t_0
+        for i in range(m):
+            p = (table(pattern[i]) + d * p) % q
+            t = (table(text[i]) + d * t) % q
+
+        for s in range(n - m + 1):
+            if p == t:
+                j = 0
+                flag = True
+                while flag and j < m:
+                    if text[s+j] != pattern[j]:
+                        flag = False
+                    j += 1
+                if flag:
+                    count += 1
+            if s < n - m:
+                # getting t_s+1 throught t_s
+                t = (d * (t - h * table(text[s])) + table(text[s + m])) % q
+                if t < 0:
+                    t = t + q
+        return count
+
 
 
 
