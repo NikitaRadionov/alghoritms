@@ -56,6 +56,48 @@ def horners_rule(a:list, x:int) -> int:
         raise ValueError
 
 
+def gcd_euclid(a:int, b:int) -> int:
+    """
+    Euclid algorithm of finding greatest common divisor of numbers a and b
+
+    Complexity: O(lg(min(a, b)))
+
+    Args:
+        a (int): some int
+        b (int): some int
+
+    Returns:
+        int:
+    """
+    if b == 0:
+        return a
+    else:
+        return gcd_euclid(b, a % b)
+
+
+def euclid_extended(a:int, b:int) -> tuple:
+    """
+    Extended Euclid algorithm
+    let d = gcd(a, b). d is linear combination a and b, so d = ax + by.
+    This alhorithm returns tuple of the form (d, x, y)
+    Use this algorithm if you need x and y
+
+    Complexity: O(lg(min(a, b)))
+
+    Args:
+        a (int): some int
+        b (int): some int
+
+    Returns:
+        tuple: (d, x, y)
+    """
+    if b == 0:
+        return (a, 1, 0)
+    else:
+        v = euclid_extended(b, a % b)
+        return (v[0], v[2], v[1] - (a // b) * v[2])
+
+
 class Poly:
 
     def __init__(self, *args):

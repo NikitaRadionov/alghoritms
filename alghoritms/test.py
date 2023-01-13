@@ -1,4 +1,6 @@
 from alghoritms import *
+# print(gcd_euclid(99, 78))
+# print(euclid_extended(99, 78))
 # print(pow(9, 9))
 # a = 4
 # n = 3
