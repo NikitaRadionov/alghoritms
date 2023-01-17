@@ -1,4 +1,8 @@
 from alghoritms import *
+# print(modular_exponentiation(7, 560, 561))
+# print(go_to_binary(10))
+# print(bin(10)[2:])
+# print(modular_linear_solver(14, 30, 100))
 # print(gcd_euclid(99, 78))
 # print(euclid_extended(99, 78))
 # print(pow(9, 9))

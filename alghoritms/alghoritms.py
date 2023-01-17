@@ -98,6 +98,76 @@ def euclid_extended(a:int, b:int) -> tuple:
         return (v[0], v[2], v[1] - (a // b) * v[2])
 
 
+def modular_linear_solver(a:int, b:int, n:int) -> tuple:
+    """
+        This is algorithm for solving equation like this
+        ax = b (mod n)
+    Args:
+        a (int): a in equation
+        b (int): b in equation
+        n (int): n in equation
+
+    Complexity: O(lg(n) + gcd(a, n))
+
+    Returns:
+        tuple: a tuple of solutions. if equation have not solutions, will be returned empty tuple
+    """
+    v = euclid_extended(a, n)
+    if b % v[0] == 0:
+        x = (v[1] *(b//v[0])) % n
+        lst = [x + i*(n//v[0]) for i in range(v[0])]
+        return tuple(lst)
+    else:
+        return tuple()
+
+
+def go_to_binary(a:int) -> str:
+    """
+    This algorithm find reversed binary representation of number a
+
+    Complexity: O(n) where n - count of digits in a
+
+    Args:
+        a (int): input number
+
+    Returns:
+        str: binary representation of a
+    """
+    s = ""
+    while a != 0:
+        s += str(a % 2)
+        a //= 2
+    return s
+
+
+def modular_exponentiation(a:int, b:int, n:int) -> int:
+    """
+    Imagine that you must solve this: a^b = x ( mod n)
+    This algorithm find x for you.
+
+    Complexity: O( len(go_to_binary(b)) ) + O(bn) where bn - count of digits in b
+
+    Args:
+        a (int): a in equation
+        b (int): b in equation
+        n (int): n in equation
+
+    Returns:
+        int: x in equation
+    """
+    c = 0
+    d = 1
+    bi = go_to_binary(b)
+    k = len(bi)
+    for i in range(k - 1,-1,-1):
+        c = c * 2
+        d = (d * d) % n
+        if bi[i] == "1":
+            c = c + 1
+            d = (d * a) % n
+    return d
+
+
 class Poly:
 
     def __init__(self, *args):
@@ -509,8 +579,6 @@ def strFind_RabinKarp(pattern:str, text:str, q:int = 101, d:int = 256, table:dic
                 if t < 0:
                     t = t + q
         return count
-
-
 
 
 
