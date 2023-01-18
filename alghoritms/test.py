@@ -1,4 +1,25 @@
 from alghoritms import *
+# s = "ababababababab"
+# print(strCountDifferentSubstr_Zfunc(s))
+# s = "ababababababab"
+# print(strCompession_Zfunc(s))
+# pattern = "pa"
+# text = "parapapa"
+# text1 = "parapapaparapraspaarpapara"
+# print(strFind_naive(pattern, text))
+# print(strFind_naive(pattern, text1))
+# print(' ')
+# print(strFind_RabinKarp(pattern, text))
+# print(strFind_RabinKarp(pattern, text1))
+# print(' ')
+# print(strFind_Zfunc(pattern, text))
+# print(strFind_Zfunc(pattern, text1))
+# a = [2, 5, 8, 13, 21, 27, 35]
+# print(binary_search_imaginary(a, 28))
+# a = Heap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7], max_heap=False)
+# print(a.A)
+# a = [4, 1, 3, 2, 16, 9, 10, 14, 8, 7]
+# print(heapsort(a, reverse=True))
 # print(modular_exponentiation(7, 560, 561))
 # print(go_to_binary(10))
 # print(bin(10)[2:])

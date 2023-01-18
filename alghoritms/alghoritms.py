@@ -1,15 +1,176 @@
 import time
+from typing import Any
+
+#cs && searching algorithms
+def go_to_binary(a:int) -> str:
+    """
+    This algorithm find reversed binary representation of number a
+
+    Complexity: O(n) where n - count of digits in a
+
+    Args:
+        a (int): input number
+
+    Returns:
+        str: binary representation of a
+    """
+    s = ""
+    while a != 0:
+        s += str(a % 2)
+        a //= 2
+    return s
+
+
+def linear_search(lst:list, a:Any) -> int:
+    """
+       This is naive algorithm of searching element a in collection lst
+       This algorithm find for you index of element a in collection lst if element a is in the lst
+    
+    Complexity: O(n)
+
+    Args:
+        lst (list): any collection
+        a (Any): some element
+
+    Returns:
+        int: index of element a in collection lst
+    """
+    for i in range(len(lst)):
+        if lst[i] == a:
+            return i
+
+
+def binary_search(lst:list, x:int) -> int:
+    """
+       This is algorithm of binary searching in sorted by ascending collection.
+       This algorithm find for you such index i that lst[i] == x is True
+       Use this algorithm if you are sure that x exactly in lst and you need only index of x
+
+    Complexity: O(log(n)) where n = len(lst)
+
+    Args:
+        lst (list): sorted by ascending collection
+        x (int): some element
+
+    Returns:
+        int: index of element x in collection lst
+    """
+    l = 0
+    r = len(lst) - 1
+    while (r - l + 1) > 0:
+        m = l + ((r - l) // 2)
+        if lst[m] > x:
+            r = m - 1
+        elif lst[m] < x:
+            l = m + 1
+        else:
+            return m
+    return None
+
+
+def binary_search_imaginary(lst:list, x:int) -> int:
+    """
+        This is algorithm of binary searching in sorted by ascending collection.
+        This algorithm find for you such index i that x must be placed under that index.
+        That algorithm can find index of existing element, and intended index of an element
+        If algorithm returns -1 that mean that you need extend your collection and put x under index 0
+    
+    Complexity: O(log(n)) where n = len(lst)
+
+    Args:
+        lst (list): sorted by ascending collection
+        x (int): some element
+
+    Returns:
+        int: index of element x in collection lst
+    """
+    l = -1
+    r = len(lst)
+    while r - l > 1:
+        m = l + (r - l) // 2
+        if lst[m] <= x:
+            l = m
+        else:
+            r = m
+    return l
+
+
+# data structures
+class Heap:
+    """
+        This is a heap.
+        Heap is using in heap-sort algorithm.
+        You can create heap: h = Heap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7])
+        Look at the result: h.A
+        You can create min-heap: h = Heap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7], max_heap = False)
+    """
+
+    def __init__(self, a:list, max_heap = True):
+        self.A = self.__build_max_heap(a) if max_heap else self.__build_min_heap(a)
+    
+
+    def __max_heapify(self, a:list, i:int):
+        """
+            Complexity: O(log(n))
+        """
+
+        L = 2*i + 1
+        R = 2*i + 2
+        largest = L if L < len(a) and a[L] > a[i] else i
+        largest = R if R < len(a) and a[R] > a[largest] else largest
+        if largest != i:
+            swap = a[largest]
+            a[largest] = a[i]
+            a[i] = swap
+            self.__max_heapify(a, largest)
+
+
+    def __build_max_heap(self, a:list):
+        """
+            Complexity: O(n)
+        """
+
+        heap = a.copy()
+        for i in range((len(a) // 2) + 1, -1, -1):
+            self.__max_heapify(heap, i)
+        return heap
+    
+
+    def __min_heapify(self, a:list, i:int):
+        """
+            Complexity: O(log(n))
+        """
+
+        L = 2*i + 1
+        R = 2*i + 2
+        minest = L if L < len(a) and a[L] < a[i] else i
+        minest = R if R < len(a) and a[R] < a[minest] else minest
+        if minest != i:
+            swap = a[minest]
+            a[minest] = a[i]
+            a[i] = swap
+            self.__min_heapify(a, minest)
+    
+
+    def __build_min_heap(self, a:list):
+        """
+            Complexity: O(n)
+        """
+
+        heap = a.copy()
+        for i in range((len(a) // 2) + 1, -1, -1):
+            self.__min_heapify(heap, i)
+        return heap
+
+
 #maths
-def pow(a:int , n:int)->float:
+def pow(a:int , n:int) -> float:
     """ Возводить в степень можно гораздо быстрее,
         чем за n умножений! Для этого
         нужно воспользоваться следующими
         рекуррентными соотношениями:
         aⁿ = (a²)ⁿ/² при четном n,
         aⁿ=a⋅aⁿ⁻¹ при нечетном n.
-        Реализуйте алгоритм быстрого возведения
-        в степень. Если вы все сделаете правильно,то
-        сложность вашего алгоритма будет O(logn).
 
     Complexity: O(logn)
 
@@ -119,25 +280,6 @@ def modular_linear_solver(a:int, b:int, n:int) -> tuple:
         return tuple(lst)
     else:
         return tuple()
-
-
-def go_to_binary(a:int) -> str:
-    """
-    This algorithm find reversed binary representation of number a
-
-    Complexity: O(n) where n - count of digits in a
-
-    Args:
-        a (int): input number
-
-    Returns:
-        str: binary representation of a
-    """
-    s = ""
-    while a != 0:
-        s += str(a % 2)
-        a //= 2
-    return s
 
 
 def modular_exponentiation(a:int, b:int, n:int) -> int:
@@ -395,7 +537,7 @@ class QuadraticPolynomial(Poly):
 
 
 # Sorting algorithms
-def bubleSort(lst:list, reverse=False, copy=True)->list:
+def bubleSort(lst:list, reverse:bool=False, copy:bool=True) -> list:
     """
         Buble sort. Naive realisation.
         Ascending sort by default.
@@ -434,7 +576,7 @@ def bubleSort(lst:list, reverse=False, copy=True)->list:
     return a
 
 
-def bubleSort_optimized(lst:list, reverse=False, copy=True)->list:
+def bubleSort_optimized(lst:list, reverse:bool=False, copy:bool=True) -> list:
     """
         Buble sort. Optimized realisation.
         Ascending sort by default.
@@ -478,9 +620,64 @@ def bubleSort_optimized(lst:list, reverse=False, copy=True)->list:
     return a
 
 
+def heapsort(lst:list, reverse:bool=False) -> list:
+    """
+        This is algorithm of sorting by heap.
+        Ascending sort by default.
+        Set reverse=True, if you want descending order
+    
+    Complexity: O(nlog(n))
+
+    Args:
+        lst (list): unsorted list
+        reverse (bool, optional): ascending/descending order. Defaults to False.
+
+    Returns:
+        list: sorted list
+    """
+
+    def maxheapify(a:list, i:int, heap_size:int):
+        L = 2*i + 1
+        R = 2*i + 2
+        largest = L if L < heap_size and a[L] > a[i] else i
+        largest = R if R < heap_size and a[R] > a[largest] else largest
+        if largest != i:
+            swap = a[largest]
+            a[largest] = a[i]
+            a[i] = swap
+            maxheapify(a, largest, heap_size)
+    
+    def minheapify(a:list, i:int, heap_size:int):
+        L = 2*i + 1
+        R = 2*i + 2
+        minest = L if L < heap_size and a[L] < a[i] else i
+        minest = R if R < heap_size and a[R] < a[minest] else minest
+        if minest != i:
+            swap = a[minest]
+            a[minest] = a[i]
+            a[i] = swap
+            maxheapify(a, minest, heap_size)
+    
+    a = Heap(lst, max_heap=(not reverse)).A
+
+    size = len(a)
+    for i in range(len(a) - 1, 0, -1):
+        swap = a[0]
+        a[0] = a[i]
+        a[i] = swap
+        size -= 1
+        if reverse:
+            minheapify(a, 0, size)
+        else:
+            maxheapify(a, 0, size)
+    return a
+
+
+
 # string algorithms
-def strFind_naive(pattern:str, text:str)->int:
-    """This is naive realisation algorithm
+def strFind_naive(pattern:str, text:str) -> int:
+    """
+       This is naive realisation algorithm
        for finding a substring in a string
 
     Complexity: O((n - m + 1)m)
@@ -507,7 +704,7 @@ def strFind_naive(pattern:str, text:str)->int:
     return s
 
 
-def strFind_RabinKarp(pattern:str, text:str, q:int = 101, d:int = 256, table:dict = None)->int:
+def strFind_RabinKarp(pattern:str, text:str, q:int = 101, d:int = 256, table:dict = None) -> int:
     """This is Rabin-Karp algorithm for
        finding a substring in a string
 
@@ -581,6 +778,150 @@ def strFind_RabinKarp(pattern:str, text:str, q:int = 101, d:int = 256, table:dic
         return count
 
 
+def z_function_naive(s:str) -> list:
+    """
+        This is algorithm for computing z function.
+        Algorithm returns collection z.
+        z[i] - наибольший общий префикс строки s и её i-го суффикса 
+        This is naive realisation of this algorithm.
+    
+    Complexity: O(n^2)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        list: collection z
+    """
+    n = len(s)
+    z = [0] * n
+    for i in range(1, n):
+        while s[i + z[i]] == s[z[i]] and i + z[i] < n:
+            z[i] += 1
+    return z
+
+
+def z_function_optimized(s:str) -> list:
+    """
+        This is algorithm for computing z function.
+        Algorithm returns collection z.
+        z[i] - наибольший общий префикс строки s и её i-го суффикса 
+        This is optimized realisation of this algorithm.
+
+    Complexity: O(n)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        list: collection z
+    """
+    n = len(s)
+    z = [0] * n
+    l = 0
+    r = 0
+    for i in range(1, n):
+        if i <= r:
+            z[i] = min(r - i + 1, z[i - l])
+        while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+            z[i] += 1
+        if (i + z[i] - 1 > r):
+            l = i
+            r = i + z[i] - 1
+    return z
+
+
+def strFind_Zfunc(pattern:str, text:str) -> int:
+    """
+       This realisation algorithm
+       for finding a substring in a string
+       with using Zfunction
+    
+    Complexity: O(len(pattern) + len(text))
+
+    Args:
+        pattern (str): pattern
+        text (str): text for finding matches
+
+    Returns:
+        int: count of matches
+    """
+    s = pattern + "#" + text
+    z = z_function_optimized(s)
+    p = len(pattern)
+    count = 0
+    for i in range(len(text)):
+        if z[i + p + 1] == p:
+            count += 1
+    return count
+
+
+def strCompession_Zfunc(s:str) -> str:
+    """
+        This algorithm find string such string t that s = t + t + ... + t.
+        This algorithm uses Z-function optimized realisation.
+
+    Complexity: O(n)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        str: compressed string
+    """
+    n = len(s)
+    z = z_function_optimized(s)
+    for i in range(n):
+        if i + z[i] == n and n % i == 0:
+            t = s[:i]
+            return t
+    return None
+
+
+def strCountDifferentSubstr_Zfunc(s:str) -> int:
+    """
+        This algorithm find for you count of different substrings in string s by Z-function.
+    
+    Complexity: O(n^2)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        int: count of different substrings
+    """
+    def z_func(s:str):
+        n = len(s)
+        z = [0] * n
+        l = 0
+        r = 0
+        z_max = 0
+        for i in range(1, n):
+            if i <= r:
+                z[i] = min(r - i + 1, z[i - l])
+            while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+                z[i] += 1
+            if (i + z[i] - 1 > r):
+                l = i
+                r = i + z[i] - 1
+            if z_max < z[i]:
+                z_max = z[i]
+        return z_max
+
+    n = len(s)
+    string = ""
+    count = 0
+    for i in range(n):
+        string += s[i]
+        length = i + 1
+        z = z_func(string)
+        count += length - z
+    return count
+
 
 if __name__ == "__main__":
-    print("Hi")
+    s = "ababababababab"
+    print(strCountDifferentSubstr_Zfunc(s))
+    # s = "aaabaab"
+    # print(z_function_optimized(s))
+
