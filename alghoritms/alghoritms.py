@@ -1,5 +1,9 @@
 import time
 from typing import Any
+#This library provides you with implementations of fundamental algorithms and data structures
+#For each entity are presented Time and Memory complexity. If there is no inside entity words Time and Memory 
+#then inside must be word Complexity - it's mean Time complexity
+
 
 #cs && searching algorithms
 def go_to_binary(a:int) -> str:
@@ -626,7 +630,7 @@ def heapsort(lst:list, reverse:bool=False) -> list:
         Ascending sort by default.
         Set reverse=True, if you want descending order
     
-    Complexity: O(nlog(n))
+    Complexity: O(nlog(n)) where n = len(lst)
 
     Args:
         lst (list): unsorted list
@@ -681,7 +685,7 @@ def prefix_function_naive(s:str) -> list:
         prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
                                                    k=1..i
                                                    
-    Complexity: O(n^3)
+    Complexity: O(n^3) where n = len(s)
 
     Args:
         s (str): input str
@@ -713,7 +717,7 @@ def prefix_function_optimized(s:str) -> list:
         2. if s[i + 1] == s[p[i]] then p[i + 1] = p[i] + 1
         With this optimizations algorithm have complexity O(n) but naive algorithm have O(n^3) !
                                                    
-    Complexity: O(n)
+    Complexity: O(n) where n = len(s)
 
     Args:
         s (str): input str
@@ -853,7 +857,7 @@ def strFind_naive(pattern:str, text:str) -> int:
        This is naive realisation algorithm
        for finding a substring in a string
 
-    Complexity: O((n - m + 1)m)
+    Complexity: O((n - m + 1)m) where n = len(text), m = len(pattern)
 
     Args:
         pattern (str): pattern
