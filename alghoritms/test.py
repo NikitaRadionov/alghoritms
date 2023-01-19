@@ -1,5 +1,12 @@
 from alghoritms import *
 # s = "ababababababab"
+# s = 'abcabcd'
+# print(prefix_function_naive(s))
+# print(prefix_function_optimized(s))
+# print(strCountDifferentSubstr_Zfunc(s))
+# s = "aaabaab"
+# print(z_function_optimized(s))
+# s = "ababababababab"
 # print(strCountDifferentSubstr_Zfunc(s))
 # s = "ababababababab"
 # print(strCompession_Zfunc(s))

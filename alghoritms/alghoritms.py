@@ -675,6 +675,179 @@ def heapsort(lst:list, reverse:bool=False) -> list:
 
 
 # string algorithms
+def prefix_function_naive(s:str) -> list:
+    """
+        This is naive algorithm for computing prefix function.
+        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
+                                                   k=1..i
+                                                   
+    Complexity: O(n^3)
+
+    Args:
+        s (str): input str
+
+    Returns:
+        list: prefix function
+    """
+    n = len(s)
+    p = [0] * n
+    for i in range(n):
+        m = 0
+        for k in range(1, i + 1):
+            j = 0
+            while j < k and s[j] == s[j + i - k + 1]:
+                j += 1
+            if j == k and m < k:
+                m = k
+        p[i] = m
+    return p
+
+
+def prefix_function_optimized(s:str) -> list:
+    """
+        This is naive algorithm for computing prefix function.
+        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
+                                                   k=1..i
+        Optimization of naive algorithm consists of two properties:
+        1. for each i in [0..n-2]: p[i] + 1 >= p[i + 1]
+        2. if s[i + 1] == s[p[i]] then p[i + 1] = p[i] + 1
+        With this optimizations algorithm have complexity O(n) but naive algorithm have O(n^3) !
+                                                   
+    Complexity: O(n)
+
+    Args:
+        s (str): input str
+
+    Returns:
+        list: prefix function
+    """
+    n = len(s)
+    p = [0] * n
+    for i in range(1, n):
+        j = p[i - 1]
+        while j > 0 and s[i] != s[j]:
+            j = p[j - 1]
+        j = j + 1 if s[i] == s[j] else j
+        p[i] = j
+    return p
+
+
+def z_function_naive(s:str) -> list:
+    """
+        This is algorithm for computing z function.
+        Algorithm returns collection z.
+        z[i] - наибольший общий префикс строки s и её i-го суффикса 
+        This is naive realisation of this algorithm.
+    
+    Complexity: O(n^2)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        list: collection z
+    """
+    n = len(s)
+    z = [0] * n
+    for i in range(1, n):
+        while s[i + z[i]] == s[z[i]] and i + z[i] < n:
+            z[i] += 1
+    return z
+
+
+def z_function_optimized(s:str) -> list:
+    """
+        This is algorithm for computing z function.
+        Algorithm returns collection z.
+        z[i] - наибольший общий префикс строки s и её i-го суффикса 
+        This is optimized realisation of this algorithm.
+
+    Complexity: O(n)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        list: collection z
+    """
+    n = len(s)
+    z = [0] * n
+    l = 0
+    r = 0
+    for i in range(1, n):
+        if i <= r:
+            z[i] = min(r - i + 1, z[i - l])
+        while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+            z[i] += 1
+        if (i + z[i] - 1 > r):
+            l = i
+            r = i + z[i] - 1
+    return z
+
+
+def strCompession_Zfunc(s:str) -> str:
+    """
+        This algorithm find string such string t that s = t + t + ... + t.
+        This algorithm uses Z-function optimized realisation.
+
+    Complexity: O(n)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        str: compressed string
+    """
+    n = len(s)
+    z = z_function_optimized(s)
+    for i in range(n):
+        if i + z[i] == n and n % i == 0:
+            t = s[:i]
+            return t
+    return None
+
+
+def strCountDifferentSubstr_Zfunc(s:str) -> int:
+    """
+        This algorithm find for you count of different substrings in string s by Z-function.
+    
+    Complexity: O(n^2)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        int: count of different substrings
+    """
+    def z_func(s:str):
+        n = len(s)
+        z = [0] * n
+        l = 0
+        r = 0
+        z_max = 0
+        for i in range(1, n):
+            if i <= r:
+                z[i] = min(r - i + 1, z[i - l])
+            while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+                z[i] += 1
+            if (i + z[i] - 1 > r):
+                l = i
+                r = i + z[i] - 1
+            if z_max < z[i]:
+                z_max = z[i]
+        return z_max
+
+    n = len(s)
+    string = ""
+    count = 0
+    for i in range(n):
+        string += s[i]
+        length = i + 1
+        z = z_func(string)
+        count += length - z
+    return count
+
+
 def strFind_naive(pattern:str, text:str) -> int:
     """
        This is naive realisation algorithm
@@ -778,62 +951,9 @@ def strFind_RabinKarp(pattern:str, text:str, q:int = 101, d:int = 256, table:dic
         return count
 
 
-def z_function_naive(s:str) -> list:
-    """
-        This is algorithm for computing z function.
-        Algorithm returns collection z.
-        z[i] - наибольший общий префикс строки s и её i-го суффикса 
-        This is naive realisation of this algorithm.
-    
-    Complexity: O(n^2)
-
-    Args:
-        s (str): input string
-
-    Returns:
-        list: collection z
-    """
-    n = len(s)
-    z = [0] * n
-    for i in range(1, n):
-        while s[i + z[i]] == s[z[i]] and i + z[i] < n:
-            z[i] += 1
-    return z
-
-
-def z_function_optimized(s:str) -> list:
-    """
-        This is algorithm for computing z function.
-        Algorithm returns collection z.
-        z[i] - наибольший общий префикс строки s и её i-го суффикса 
-        This is optimized realisation of this algorithm.
-
-    Complexity: O(n)
-
-    Args:
-        s (str): input string
-
-    Returns:
-        list: collection z
-    """
-    n = len(s)
-    z = [0] * n
-    l = 0
-    r = 0
-    for i in range(1, n):
-        if i <= r:
-            z[i] = min(r - i + 1, z[i - l])
-        while i + z[i] < n and s[z[i]] == s[i + z[i]]:
-            z[i] += 1
-        if (i + z[i] - 1 > r):
-            l = i
-            r = i + z[i] - 1
-    return z
-
-
 def strFind_Zfunc(pattern:str, text:str) -> int:
     """
-       This realisation algorithm
+       This is realisation of algorithm
        for finding a substring in a string
        with using Zfunction
     
@@ -856,132 +976,77 @@ def strFind_Zfunc(pattern:str, text:str) -> int:
     return count
 
 
-def strCompession_Zfunc(s:str) -> str:
+def strFind_KMP(pattern:str, text:str) -> int:
     """
-        This algorithm find string such string t that s = t + t + ... + t.
-        This algorithm uses Z-function optimized realisation.
-
-    Complexity: O(n)
-
-    Args:
-        s (str): input string
-
-    Returns:
-        str: compressed string
-    """
-    n = len(s)
-    z = z_function_optimized(s)
-    for i in range(n):
-        if i + z[i] == n and n % i == 0:
-            t = s[:i]
-            return t
-    return None
-
-
-def strCountDifferentSubstr_Zfunc(s:str) -> int:
-    """
-        This algorithm find for you count of different substrings in string s by Z-function.
+       This is realisation of Knuth-Morris-Pratt algorithm
+       for finding a substring in a string.
+       This algorithm uses prefix_function_optimized
+       function from this library.
     
-    Complexity: O(n^2)
+    Time complexity: O(n + m) where n = len(pattern), m = len(text)
+    Memory complexity: O(n + m)
 
     Args:
-        s (str): input string
+        pattern (str): pattern
+        text (str): text for finding matches
 
     Returns:
-        int: count of different substrings
+        int: count of matches
     """
-    def z_func(s:str):
-        n = len(s)
-        z = [0] * n
-        l = 0
-        r = 0
-        z_max = 0
-        for i in range(1, n):
-            if i <= r:
-                z[i] = min(r - i + 1, z[i - l])
-            while i + z[i] < n and s[z[i]] == s[i + z[i]]:
-                z[i] += 1
-            if (i + z[i] - 1 > r):
-                l = i
-                r = i + z[i] - 1
-            if z_max < z[i]:
-                z_max = z[i]
-        return z_max
-
-    n = len(s)
-    string = ""
+    n = len(pattern)
+    w = pattern + '#' + text
+    p = prefix_function_optimized(w)
     count = 0
-    for i in range(n):
-        string += s[i]
-        length = i + 1
-        z = z_func(string)
-        count += length - z
+    for i in range(n + 1, len(p)):
+        if p[i] == n:
+            count += 1
     return count
 
 
-def prefix_function_naive(s:str) -> list:
+def strFind_KMP_bonus(pattern:str, text:str) -> int:
     """
-        This is naive algorithm for computing prefix function.
-        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
-                                                   k=1..i
-                                                   
-    Complexity: O(n^3)
+       This is realisation of Knuth-Morris-Pratt algorithm
+       for finding a substring in a string.
+       This algorithm uses prefix_function_optimized
+       function from this library.
+       This realisation have memory complexity: O(n)
+    
+    Time complexity: O(n + m) where n = len(pattern), m = len(text)
+    Memory complexity: O(n)
 
     Args:
-        s (str): input str
+        pattern (str): pattern
+        text (str): text for finding matches
 
     Returns:
-        list: prefix function
+        int: count of matches
     """
-    n = len(s)
-    p = [0] * n
-    for i in range(n):
-        m = 0
-        for k in range(1, i + 1):
-            j = 0
-            while j < k and s[j] == s[j + i - k + 1]:
+    n = len(pattern)
+    m = len(text)
+    P = prefix_function_optimized(pattern)
+    # entries = [] // uncommented commented strings for finding entries
+    i, j, count = 0, 0, 0
+    while i < m:
+        if text[i] == pattern[j]:
+            if j == n - 1:
+                # entries.append(i - n + 1)
+                count += 1
+                j = P[j]
+            else:
                 j += 1
-            if j == k and m < k:
-                m = k
-        p[i] = m
-    return p
+            i += 1
+        elif j:
+            j = P[j-1]
+        else:
+            i += 1
+    return count
 
 
-def prefix_function_optimized(s:str) -> list:
-    """
-        This is naive algorithm for computing prefix function.
-        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
-                                                   k=1..i
-        Optimization of naive algorithm consists of two properties:
-        1. for each i in [0..n-2]: p[i] + 1 >= p[i + 1]
-        2. if s[i + 1] == s[p[i]] then p[i + 1] = p[i] + 1
-        With this optimizations algorithm have complexity O(n) but naive algorithm have O(n^3) !
-                                                   
-    Complexity: O(n)
 
-    Args:
-        s (str): input str
-
-    Returns:
-        list: prefix function
-    """
-    n = len(s)
-    p = [0] * n
-    for i in range(1, n):
-        j = p[i -1]
-        while j > 0 and s[i] != s[j]:
-            j = p[j - 1]
-        j = j + 1 if s[i] == s[j] else j
-        p[i] = j
-    return p
 
 
 if __name__ == "__main__":
-    s = "ababababababab"
-    # s = 'abcabcd'
-    print(prefix_function_naive(s))
-    print(prefix_function_optimized(s))
-    # print(strCountDifferentSubstr_Zfunc(s))
-    # s = "aaabaab"
-    # print(z_function_optimized(s))
-
+    s = 'babababab'
+    sub = 'bab'
+    print(strFind_KMP(sub, s))
+    print(strFind_KMP_bonus(sub, s))
