@@ -919,9 +919,69 @@ def strCountDifferentSubstr_Zfunc(s:str) -> int:
     return count
 
 
+def prefix_function_naive(s:str) -> list:
+    """
+        This is naive algorithm for computing prefix function.
+        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
+                                                   k=1..i
+                                                   
+    Complexity: O(n^3)
+
+    Args:
+        s (str): input str
+
+    Returns:
+        list: prefix function
+    """
+    n = len(s)
+    p = [0] * n
+    for i in range(n):
+        m = 0
+        for k in range(1, i + 1):
+            j = 0
+            while j < k and s[j] == s[j + i - k + 1]:
+                j += 1
+            if j == k and m < k:
+                m = k
+        p[i] = m
+    return p
+
+
+def prefix_function_optimized(s:str) -> list:
+    """
+        This is naive algorithm for computing prefix function.
+        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
+                                                   k=1..i
+        Optimization of naive algorithm consists of two properties:
+        1. for each i in [0..n-2]: p[i] + 1 >= p[i + 1]
+        2. if s[i + 1] == s[p[i]] then p[i + 1] = p[i] + 1
+        With this optimizations algorithm have complexity O(n) but naive algorithm have O(n^3) !
+                                                   
+    Complexity: O(n)
+
+    Args:
+        s (str): input str
+
+    Returns:
+        list: prefix function
+    """
+    n = len(s)
+    p = [0] * n
+    for i in range(1, n):
+        j = p[i -1]
+        while j > 0 and s[i] != s[j]:
+            j = p[j - 1]
+        j = j + 1 if s[i] == s[j] else j
+        p[i] = j
+    return p
+
+
 if __name__ == "__main__":
     s = "ababababababab"
-    print(strCountDifferentSubstr_Zfunc(s))
+    # s = 'abcabcd'
+    print(prefix_function_naive(s))
+    print(prefix_function_optimized(s))
+    # print(strCountDifferentSubstr_Zfunc(s))
     # s = "aaabaab"
     # print(z_function_optimized(s))
 
