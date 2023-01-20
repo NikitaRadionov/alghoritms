@@ -1,7 +1,8 @@
 import time
 from typing import Any
+from random import randint
 #This library provides you with implementations of fundamental algorithms and data structures
-#For each entity are presented Time and Memory complexity. If there is no inside entity words Time and Memory 
+#For each entity are presented Time and Memory complexity. If there is no inside entity words Time and Memory
 #then inside must be word Complexity - it's mean Time complexity
 
 
@@ -29,7 +30,7 @@ def linear_search(lst:list, a:Any) -> int:
     """
        This is naive algorithm of searching element a in collection lst
        This algorithm find for you index of element a in collection lst if element a is in the lst
-    
+
     Complexity: O(n)
 
     Args:
@@ -78,7 +79,7 @@ def binary_search_imaginary(lst:list, x:int) -> int:
         This algorithm find for you such index i that x must be placed under that index.
         That algorithm can find index of existing element, and intended index of an element
         If algorithm returns -1 that mean that you need extend your collection and put x under index 0
-    
+
     Complexity: O(log(n)) where n = len(lst)
 
     Args:
@@ -99,75 +100,7 @@ def binary_search_imaginary(lst:list, x:int) -> int:
     return l
 
 
-# data structures
-class Heap:
-    """
-        This is a heap.
-        Heap is using in heap-sort algorithm.
-        You can create heap: h = Heap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7])
-        Look at the result: h.A
-        You can create min-heap: h = Heap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7], max_heap = False)
-    """
-
-    def __init__(self, a:list, max_heap = True):
-        self.A = self.__build_max_heap(a) if max_heap else self.__build_min_heap(a)
-    
-
-    def __max_heapify(self, a:list, i:int):
-        """
-            Complexity: O(log(n))
-        """
-
-        L = 2*i + 1
-        R = 2*i + 2
-        largest = L if L < len(a) and a[L] > a[i] else i
-        largest = R if R < len(a) and a[R] > a[largest] else largest
-        if largest != i:
-            swap = a[largest]
-            a[largest] = a[i]
-            a[i] = swap
-            self.__max_heapify(a, largest)
-
-
-    def __build_max_heap(self, a:list):
-        """
-            Complexity: O(n)
-        """
-
-        heap = a.copy()
-        for i in range((len(a) // 2) + 1, -1, -1):
-            self.__max_heapify(heap, i)
-        return heap
-    
-
-    def __min_heapify(self, a:list, i:int):
-        """
-            Complexity: O(log(n))
-        """
-
-        L = 2*i + 1
-        R = 2*i + 2
-        minest = L if L < len(a) and a[L] < a[i] else i
-        minest = R if R < len(a) and a[R] < a[minest] else minest
-        if minest != i:
-            swap = a[minest]
-            a[minest] = a[i]
-            a[i] = swap
-            self.__min_heapify(a, minest)
-    
-
-    def __build_min_heap(self, a:list):
-        """
-            Complexity: O(n)
-        """
-
-        heap = a.copy()
-        for i in range((len(a) // 2) + 1, -1, -1):
-            self.__min_heapify(heap, i)
-        return heap
-
-
-#maths
+#math
 def pow(a:int , n:int) -> float:
     """ Возводить в степень можно гораздо быстрее,
         чем за n умножений! Для этого
@@ -193,7 +126,8 @@ def pow(a:int , n:int) -> float:
 
 
 def horners_rule(a:list, x:int) -> int:
-    """Horner's rule
+    """
+       Horner's rule
        Calculation of the polynomial value at point x
        The polynomial is represented in this form:
        A(x) = a[0] + x * (a[1] + x * (a[2] + ... + x * (a[n-2] + x * (a[n-1]))...))
@@ -215,7 +149,7 @@ def horners_rule(a:list, x:int) -> int:
     if n != 0:
         sum = 0
         for i in range(n-1, -1, -1):
-            sum = a[i] + sum*x
+            sum = a[i] + sum * x
         return sum
     else:
         raise ValueError
@@ -312,6 +246,712 @@ def modular_exponentiation(a:int, b:int, n:int) -> int:
             c = c + 1
             d = (d * a) % n
     return d
+
+
+# Sorting algorithms
+def bubleSort(lst:list, reverse:bool=False, copy:bool=True) -> list:
+    """
+        Buble sort. Naive realisation.
+        Ascending sort by default.
+        Set reverse=True, if you want descending order
+
+    Complexity: O(n^2)
+
+    Default using:
+        a = [2,1,5,3,9,10,3,5,4]
+        a = bubleSort(a)
+        If you want use like this:
+        a = [2,1,5,3,9,10,3,5,4]
+        bubleSort(a)
+        Set copy=False and use it like this:
+        a = [2,1,5,3,9,10,3,5,4]
+        bubleSort(a, copy=False)
+
+    Args:
+        lst (list): unsorted list
+        reverse (bool, optional): ascending/descending order. Defaults to False.
+        copy (bool, optional): copy/nocopy. Defaults to True.
+
+    Returns:
+        list: sorted list
+    """
+    def wrongOrder(a,b):
+        return a < b if reverse else a > b
+
+    a = lst.copy() if copy else lst
+    for j in range(len(a)-1):
+        for i in range(len(a)-1):
+            if wrongOrder(a[i], a[i+1]):
+                c = a[i+1]
+                a[i+1] = a[i]
+                a[i] = c
+    return a
+
+
+def bubleSort_optimized(lst:list, reverse:bool=False, copy:bool=True) -> list:
+    """
+        Buble sort. Optimized realisation.
+        Ascending sort by default.
+        Set reverse=True, if you want descending order
+
+    Complexity: O(n^2)
+
+    Default using:
+        a = [2,1,5,3,9,10,3,5,4]
+        a = bubleSort(a)
+        If you want use like this:
+        a = [2,1,5,3,9,10,3,5,4]
+        bubleSort(a)
+        Set copy=False and use it like this:
+        a = [2,1,5,3,9,10,3,5,4]
+        bubleSort(a, copy=False)
+
+    Args:
+        lst (list): unsorted list
+        reverse (bool, optional): ascending/descending order. Defaults to False.
+        copy (bool, optional): copy/nocopy. Defaults to True.
+
+    Returns:
+        list: sorted list
+    """
+    def wrongOrder(a,b):
+        return a < b if reverse else a > b
+
+    a = lst.copy() if copy else lst
+    j = 0
+    flag = True
+    while flag:
+        flag = False
+        for i in range(len(a)-j-1):
+            if wrongOrder(a[i], a[i+1]):
+                c = a[i+1]
+                a[i+1] = a[i]
+                a[i] = c
+                flag = True
+        j += 1
+    return a
+
+
+def heapsort(lst:list, reverse:bool=False) -> list:
+    """
+        This is algorithm of sorting by heap.
+        Ascending sort by default.
+        Set reverse=True, if you want descending order
+
+    Complexity: O(nlog(n)) where n = len(lst)
+
+    Args:
+        lst (list): unsorted list
+        reverse (bool, optional): ascending/descending order. Defaults to False.
+
+    Returns:
+        list: sorted list
+    """
+
+    def maxheapify(a:list, i:int, heap_size:int):
+        L = 2*i + 1
+        R = 2*i + 2
+        largest = L if L < heap_size and a[L] > a[i] else i
+        largest = R if R < heap_size and a[R] > a[largest] else largest
+        if largest != i:
+            swap = a[largest]
+            a[largest] = a[i]
+            a[i] = swap
+            maxheapify(a, largest, heap_size)
+
+    def minheapify(a:list, i:int, heap_size:int):
+        L = 2*i + 1
+        R = 2*i + 2
+        minest = L if L < heap_size and a[L] < a[i] else i
+        minest = R if R < heap_size and a[R] < a[minest] else minest
+        if minest != i:
+            swap = a[minest]
+            a[minest] = a[i]
+            a[i] = swap
+            maxheapify(a, minest, heap_size)
+
+    a = Heap(lst, max_heap=(not reverse)).A
+
+    size = len(a)
+    for i in range(len(a) - 1, 0, -1):
+        swap = a[0]
+        a[0] = a[i]
+        a[i] = swap
+        size -= 1
+        if reverse:
+            minheapify(a, 0, size)
+        else:
+            maxheapify(a, 0, size)
+    return a
+
+
+
+# string algorithms
+def prefix_function_naive(s:str) -> list:
+    """
+        This is naive algorithm for computing prefix function.
+        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
+                                                   k=1..i
+
+    Complexity: O(n^3) where n = len(s)
+
+    Args:
+        s (str): input str
+
+    Returns:
+        list: prefix function
+    """
+    n = len(s)
+    p = [0] * n
+    for i in range(n):
+        m = 0
+        for k in range(1, i + 1):
+            j = 0
+            while j < k and s[j] == s[j + i - k + 1]:
+                j += 1
+            if j == k and m < k:
+                m = k
+        p[i] = m
+    return p
+
+
+def prefix_function_optimized(s:str) -> list:
+    """
+        This is naive algorithm for computing prefix function.
+        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
+                                                   k=1..i
+        Optimization of naive algorithm consists of two properties:
+        1. for each i in [0..n-2]: p[i] + 1 >= p[i + 1]
+        2. if s[i + 1] == s[p[i]] then p[i + 1] = p[i] + 1
+        With this optimizations algorithm have complexity O(n) but naive algorithm have O(n^3) !
+
+    Complexity: O(n) where n = len(s)
+
+    Args:
+        s (str): input str
+
+    Returns:
+        list: prefix function
+    """
+    n = len(s)
+    p = [0] * n
+    for i in range(1, n):
+        j = p[i - 1]
+        while j > 0 and s[i] != s[j]:
+            j = p[j - 1]
+        j = j + 1 if s[i] == s[j] else j
+        p[i] = j
+    return p
+
+
+def z_function_naive(s:str) -> list:
+    """
+        This is algorithm for computing z function.
+        Algorithm returns collection z.
+        z[i] - наибольший общий префикс строки s и её i-го суффикса
+        This is naive realisation of this algorithm.
+
+    Complexity: O(n^2)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        list: collection z
+    """
+    n = len(s)
+    z = [0] * n
+    for i in range(1, n):
+        while s[i + z[i]] == s[z[i]] and i + z[i] < n:
+            z[i] += 1
+    return z
+
+
+def z_function_optimized(s:str) -> list:
+    """
+        This is algorithm for computing z function.
+        Algorithm returns collection z.
+        z[i] - наибольший общий префикс строки s и её i-го суффикса
+        This is optimized realisation of this algorithm.
+
+    Complexity: O(n)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        list: collection z
+    """
+    n = len(s)
+    z = [0] * n
+    l = 0
+    r = 0
+    for i in range(1, n):
+        if i <= r:
+            z[i] = min(r - i + 1, z[i - l])
+        while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+            z[i] += 1
+        if (i + z[i] - 1 > r):
+            l = i
+            r = i + z[i] - 1
+    return z
+
+
+def strCompession_Zfunc(s:str) -> str:
+    """
+        This algorithm find string such string t that s = t + t + ... + t.
+        This algorithm uses Z-function optimized realisation.
+
+    Complexity: O(n)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        str: compressed string
+    """
+    n = len(s)
+    z = z_function_optimized(s)
+    for i in range(n):
+        if i + z[i] == n and n % i == 0:
+            t = s[:i]
+            return t
+    return None
+
+
+def strCountDifferentSubstr_Zfunc(s:str) -> int:
+    """
+        This algorithm find for you count of different substrings in string s by Z-function.
+
+    Complexity: O(n^2)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        int: count of different substrings
+    """
+    def z_func(s:str):
+        n = len(s)
+        z = [0] * n
+        l = 0
+        r = 0
+        z_max = 0
+        for i in range(1, n):
+            if i <= r:
+                z[i] = min(r - i + 1, z[i - l])
+            while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+                z[i] += 1
+            if (i + z[i] - 1 > r):
+                l = i
+                r = i + z[i] - 1
+            if z_max < z[i]:
+                z_max = z[i]
+        return z_max
+
+    n = len(s)
+    string = ""
+    count = 0
+    for i in range(n):
+        string += s[i]
+        length = i + 1
+        z = z_func(string)
+        count += length - z
+    return count
+
+
+def strFind_naive(pattern:str, text:str) -> int:
+    """
+       This is naive realisation algorithm
+       for finding a substring in a string
+
+    Complexity: O((n - m + 1)m) where n = len(text), m = len(pattern)
+
+    Args:
+        pattern (str): pattern
+        text (str): text for finding matches
+
+    Returns:
+        int: count of matches
+    """
+    s = 0
+    m = len(pattern)
+    n = len(text)
+    for i in range(n-m+1):
+        j = 0
+        flag = True
+        while flag and j < m:
+            if text[i+j] != pattern[j]:
+                flag = False
+            j += 1
+        if flag:
+            s += 1
+    return s
+
+
+def strFind_RabinKarp(pattern:str, text:str, q:int = 101, d:int = 256, table:dict = None) -> int:
+    """This is Rabin-Karp algorithm for
+       finding a substring in a string
+
+    Complexity:
+                Preprocessing: θ(m)
+                Comparisons:   O((n - m + 1)m)
+                Total:         θ(m) + O((n - m + 1)m)
+    Args:
+        pattern (str): pattern
+        text (str): text for finding matches
+        q (int): prime number. dq should fit into a computer word
+        d (int): alphabet power
+        table (dict): comparison table. It's must look like {'a': 0, 'b': 1, 'c': 2, ...}
+    Returns:
+        int: count of matches
+    """
+    m = len(pattern)
+    n = len(text)
+    h = 1
+    p = 0
+    t = 0
+    count = 0
+
+    # h = d^(m-1) mod q
+    for i in range(m-1):
+        h = (h * d) % q
+
+    if d == 256 and table is None:
+        # creating p and t_0
+        for i in range(m):
+            p = (ord(pattern[i]) + d * p) % q
+            t = (ord(text[i]) + d * t) % q
+
+        for s in range(n - m + 1):
+            if p == t:
+                j = 0
+                flag = True
+                while flag and j < m:
+                    if text[s+j] != pattern[j]:
+                        flag = False
+                    j += 1
+                if flag:
+                    count += 1
+            if s < n - m:
+                # getting t_s+1 throught t_s
+                t = (d * (t - h * ord(text[s])) + ord(text[s + m])) % q
+                if t < 0:
+                    t = t + q
+        return count
+    else:
+        # creating p and t_0
+        for i in range(m):
+            p = (table(pattern[i]) + d * p) % q
+            t = (table(text[i]) + d * t) % q
+
+        for s in range(n - m + 1):
+            if p == t:
+                j = 0
+                flag = True
+                while flag and j < m:
+                    if text[s+j] != pattern[j]:
+                        flag = False
+                    j += 1
+                if flag:
+                    count += 1
+            if s < n - m:
+                # getting t_s+1 throught t_s
+                t = (d * (t - h * table(text[s])) + table(text[s + m])) % q
+                if t < 0:
+                    t = t + q
+        return count
+
+
+def strFind_Zfunc(pattern:str, text:str) -> int:
+    """
+       This is realisation of algorithm
+       for finding a substring in a string
+       with using Zfunction
+
+    Complexity: O(len(pattern) + len(text))
+
+    Args:
+        pattern (str): pattern
+        text (str): text for finding matches
+
+    Returns:
+        int: count of matches
+    """
+    s = pattern + "#" + text
+    z = z_function_optimized(s)
+    p = len(pattern)
+    count = 0
+    for i in range(len(text)):
+        if z[i + p + 1] == p:
+            count += 1
+    return count
+
+
+def strFind_KMP(pattern:str, text:str) -> int:
+    """
+       This is realisation of Knuth-Morris-Pratt algorithm
+       for finding a substring in a string.
+       This algorithm uses prefix_function_optimized
+       function from this library.
+
+    Time complexity: O(n + m) where n = len(pattern), m = len(text)
+    Memory complexity: O(n + m)
+
+    Args:
+        pattern (str): pattern
+        text (str): text for finding matches
+
+    Returns:
+        int: count of matches
+    """
+    n = len(pattern)
+    w = pattern + '#' + text
+    p = prefix_function_optimized(w)
+    count = 0
+    for i in range(n + 1, len(p)):
+        if p[i] == n:
+            count += 1
+    return count
+
+
+def strFind_KMP_bonus(pattern:str, text:str) -> int:
+    """
+       This is realisation of Knuth-Morris-Pratt algorithm
+       for finding a substring in a string.
+       This algorithm uses prefix_function_optimized
+       function from this library.
+       This realisation have memory complexity: O(n)
+
+    Time complexity: O(n + m) where n = len(pattern), m = len(text)
+    Memory complexity: O(n)
+
+    Args:
+        pattern (str): pattern
+        text (str): text for finding matches
+
+    Returns:
+        int: count of matches
+    """
+    n = len(pattern)
+    m = len(text)
+    P = prefix_function_optimized(pattern)
+    # entries = [] // uncommented commented strings for finding entries
+    i, j, count = 0, 0, 0
+    while i < m:
+        if text[i] == pattern[j]:
+            if j == n - 1:
+                # entries.append(i - n + 1)
+                count += 1
+                j = P[j]
+            else:
+                j += 1
+            i += 1
+        elif j:
+            j = P[j-1]
+        else:
+            i += 1
+    return count
+
+
+def strHash(s:str, p:int = 31) -> int:
+    """
+        This is algorithm for hashing strings.
+        h(s) = s[0] + s[1] * p + s[2] * p^2 + ... + s[n] * p^n
+        Where s[n] - code of char s[n] in Unicode, p - prime number
+
+    Complexity: O(n) where n = len(s)
+
+    Args:
+        s (str): input string
+
+    Returns:
+        int: hash of string s
+    """
+    a = [ord(s[i]) - ord('a') + 1 for i in range(len(s))]
+    return horners_rule(a, p)
+
+
+# data structures
+class Heap:
+    """
+        This is a heap.
+        Heap is using in heap-sort algorithm.
+        You can create heap: h = Heap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7])
+        Look at the result: h.A
+        You can create min-heap: h = Heap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7], max_heap = False)
+    """
+
+    def __init__(self, a:list, max_heap = True):
+        self.A = self.__build_max_heap(a) if max_heap else self.__build_min_heap(a)
+
+
+    def __max_heapify(self, a:list, i:int):
+        """
+            Complexity: O(log(n))
+        """
+
+        L = 2*i + 1
+        R = 2*i + 2
+        largest = L if L < len(a) and a[L] > a[i] else i
+        largest = R if R < len(a) and a[R] > a[largest] else largest
+        if largest != i:
+            swap = a[largest]
+            a[largest] = a[i]
+            a[i] = swap
+            self.__max_heapify(a, largest)
+
+
+    def __build_max_heap(self, a:list):
+        """
+            Complexity: O(n)
+        """
+
+        heap = a.copy()
+        for i in range((len(a) // 2) + 1, -1, -1):
+            self.__max_heapify(heap, i)
+        return heap
+
+
+    def __min_heapify(self, a:list, i:int):
+        """
+            Complexity: O(log(n))
+        """
+
+        L = 2*i + 1
+        R = 2*i + 2
+        minest = L if L < len(a) and a[L] < a[i] else i
+        minest = R if R < len(a) and a[R] < a[minest] else minest
+        if minest != i:
+            swap = a[minest]
+            a[minest] = a[i]
+            a[i] = swap
+            self.__min_heapify(a, minest)
+
+
+    def __build_min_heap(self, a:list):
+        """
+            Complexity: O(n)
+        """
+
+        heap = a.copy()
+        for i in range((len(a) // 2) + 1, -1, -1):
+            self.__min_heapify(heap, i)
+        return heap
+
+
+class Hash_table:
+    """
+        This is hash_table with open addressing
+        Collisions are solved by double hashing
+        The main hash function uses universal hashing
+    """
+
+    def __init__(self, *args):
+        self.n = len(args)
+        self.count = self.n
+        if self.n == 0:
+            self.m = 10
+            self.table = [None] * self.m
+            self.alpha = 0
+            self.__flag = False
+        else:
+            self.m = 2 * self.n
+            self.table = [None] * self.m
+            self.alpha = self.n / self.m
+            self.__flag == False
+            for element in args:
+                key = element[0]
+                self.insert(element)
+
+
+    def __hash_func(self, key:int | float | bool | str, i:int):
+        if isinstance(key, (float, bool)):
+            key = int(key)
+
+        if isinstance(key, str):
+            key = strHash(key)
+
+        if not self.__flag:
+            self.__P = 701
+            self.__A = randint(1, self.__P - 1)
+            self.__B = randint(0, self.__P - 1)
+            self.__flag = True
+
+        def h(key):
+            return ((self.__A * key + self.__B) % self.__P ) % self.m
+
+        def g(key):
+            return 1 + key % (self.m - 1)
+        return (h(key) + i * g(key)) % self.m
+
+
+    def insert(self, x:tuple):
+
+        def default(x, flg = True):
+            key = x[0]
+            i = 0
+            while not (self.table[self.__hash_func(key, i)] is None):
+                i += 1
+            self.table[self.__hash_func(key, i)] = x
+            if flg:
+                self.n += 1
+                self.count = self.n
+                self.alpha = self.n / self.m
+
+        if self.alpha < 0.7:
+            default(x)
+        else:
+            args = []
+            for i in range(self.m):
+                if not (self.table[i] is None):
+                    args.append(self.table[i])
+            self.m = int((10 * (self.n + 1)) / 3)
+            self.table = [None] * self.m
+            for element in args:
+                default(element, flg = False)
+            default(x)
+
+
+    def get_element(self, key:int | float | bool | str):
+        i = 0
+        x = ((), ())
+        while key != x[0]:
+            x = self.table[self.__hash_func(key, i)]
+            if x is None:
+                raise KeyError('Inccorect key has been put')
+            i += 1
+        return x[1]
+
+
+    def delete(self, key:int | float | bool | str):
+        const = "DELETED"
+        i = 0
+        x = ((), ())
+        while key != x[0]:
+            ikey = self.__hash_func(key, i)
+            x = self.table[ikey]
+            if x is None:
+                raise KeyError("Can't to delete a non-existent key")
+            i += 1
+        self.table[ikey] = const
+        self.count -= 1
+
+
+    def __str__(self):
+        string = "{ "
+        c = 0
+        for x in self.table:
+            if not (x is None) and not (x == "DELETED"):
+                if c == self.count - 1:
+                    string += str(x[0]) + " : " + str(x[1]) + " "
+                else:
+                    string += str(x[0]) + " : " + str(x[1]) + ", "
+                c += 1
+        string += "}"
+        return string
+
+    __repr__ = __str__
 
 
 class Poly:
@@ -538,514 +1178,6 @@ class QuadraticPolynomial(Poly):
                 return [x]
             if D < 0:
                 return []
-
-
-# Sorting algorithms
-def bubleSort(lst:list, reverse:bool=False, copy:bool=True) -> list:
-    """
-        Buble sort. Naive realisation.
-        Ascending sort by default.
-        Set reverse=True, if you want descending order
-
-    Complexity: O(n^2)
-
-    Default using:
-        a = [2,1,5,3,9,10,3,5,4]
-        a = bubleSort(a)
-        If you want use like this:
-        a = [2,1,5,3,9,10,3,5,4]
-        bubleSort(a)
-        Set copy=False and use it like this:
-        a = [2,1,5,3,9,10,3,5,4]
-        bubleSort(a, copy=False)
-
-    Args:
-        lst (list): unsorted list
-        reverse (bool, optional): ascending/descending order. Defaults to False.
-        copy (bool, optional): copy/nocopy. Defaults to True.
-
-    Returns:
-        list: sorted list
-    """
-    def wrongOrder(a,b):
-        return a < b if reverse else a > b
-
-    a = lst.copy() if copy else lst
-    for j in range(len(a)-1):
-        for i in range(len(a)-1):
-            if wrongOrder(a[i], a[i+1]):
-                c = a[i+1]
-                a[i+1] = a[i]
-                a[i] = c
-    return a
-
-
-def bubleSort_optimized(lst:list, reverse:bool=False, copy:bool=True) -> list:
-    """
-        Buble sort. Optimized realisation.
-        Ascending sort by default.
-        Set reverse=True, if you want descending order
-
-    Complexity: O(n^2)
-
-    Default using:
-        a = [2,1,5,3,9,10,3,5,4]
-        a = bubleSort(a)
-        If you want use like this:
-        a = [2,1,5,3,9,10,3,5,4]
-        bubleSort(a)
-        Set copy=False and use it like this:
-        a = [2,1,5,3,9,10,3,5,4]
-        bubleSort(a, copy=False)
-
-    Args:
-        lst (list): unsorted list
-        reverse (bool, optional): ascending/descending order. Defaults to False.
-        copy (bool, optional): copy/nocopy. Defaults to True.
-
-    Returns:
-        list: sorted list
-    """
-    def wrongOrder(a,b):
-        return a < b if reverse else a > b
-
-    a = lst.copy() if copy else lst
-    j = 0
-    flag = True
-    while flag:
-        flag = False
-        for i in range(len(a)-j-1):
-            if wrongOrder(a[i], a[i+1]):
-                c = a[i+1]
-                a[i+1] = a[i]
-                a[i] = c
-                flag = True
-        j += 1
-    return a
-
-
-def heapsort(lst:list, reverse:bool=False) -> list:
-    """
-        This is algorithm of sorting by heap.
-        Ascending sort by default.
-        Set reverse=True, if you want descending order
-    
-    Complexity: O(nlog(n)) where n = len(lst)
-
-    Args:
-        lst (list): unsorted list
-        reverse (bool, optional): ascending/descending order. Defaults to False.
-
-    Returns:
-        list: sorted list
-    """
-
-    def maxheapify(a:list, i:int, heap_size:int):
-        L = 2*i + 1
-        R = 2*i + 2
-        largest = L if L < heap_size and a[L] > a[i] else i
-        largest = R if R < heap_size and a[R] > a[largest] else largest
-        if largest != i:
-            swap = a[largest]
-            a[largest] = a[i]
-            a[i] = swap
-            maxheapify(a, largest, heap_size)
-    
-    def minheapify(a:list, i:int, heap_size:int):
-        L = 2*i + 1
-        R = 2*i + 2
-        minest = L if L < heap_size and a[L] < a[i] else i
-        minest = R if R < heap_size and a[R] < a[minest] else minest
-        if minest != i:
-            swap = a[minest]
-            a[minest] = a[i]
-            a[i] = swap
-            maxheapify(a, minest, heap_size)
-    
-    a = Heap(lst, max_heap=(not reverse)).A
-
-    size = len(a)
-    for i in range(len(a) - 1, 0, -1):
-        swap = a[0]
-        a[0] = a[i]
-        a[i] = swap
-        size -= 1
-        if reverse:
-            minheapify(a, 0, size)
-        else:
-            maxheapify(a, 0, size)
-    return a
-
-
-
-# string algorithms
-def prefix_function_naive(s:str) -> list:
-    """
-        This is naive algorithm for computing prefix function.
-        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
-                                                   k=1..i
-                                                   
-    Complexity: O(n^3) where n = len(s)
-
-    Args:
-        s (str): input str
-
-    Returns:
-        list: prefix function
-    """
-    n = len(s)
-    p = [0] * n
-    for i in range(n):
-        m = 0
-        for k in range(1, i + 1):
-            j = 0
-            while j < k and s[j] == s[j + i - k + 1]:
-                j += 1
-            if j == k and m < k:
-                m = k
-        p[i] = m
-    return p
-
-
-def prefix_function_optimized(s:str) -> list:
-    """
-        This is naive algorithm for computing prefix function.
-        prefix function is a collection p where p[i] = max{k | s[0...k-1] == s[i-k+1...i]}
-                                                   k=1..i
-        Optimization of naive algorithm consists of two properties:
-        1. for each i in [0..n-2]: p[i] + 1 >= p[i + 1]
-        2. if s[i + 1] == s[p[i]] then p[i + 1] = p[i] + 1
-        With this optimizations algorithm have complexity O(n) but naive algorithm have O(n^3) !
-                                                   
-    Complexity: O(n) where n = len(s)
-
-    Args:
-        s (str): input str
-
-    Returns:
-        list: prefix function
-    """
-    n = len(s)
-    p = [0] * n
-    for i in range(1, n):
-        j = p[i - 1]
-        while j > 0 and s[i] != s[j]:
-            j = p[j - 1]
-        j = j + 1 if s[i] == s[j] else j
-        p[i] = j
-    return p
-
-
-def z_function_naive(s:str) -> list:
-    """
-        This is algorithm for computing z function.
-        Algorithm returns collection z.
-        z[i] - наибольший общий префикс строки s и её i-го суффикса 
-        This is naive realisation of this algorithm.
-    
-    Complexity: O(n^2)
-
-    Args:
-        s (str): input string
-
-    Returns:
-        list: collection z
-    """
-    n = len(s)
-    z = [0] * n
-    for i in range(1, n):
-        while s[i + z[i]] == s[z[i]] and i + z[i] < n:
-            z[i] += 1
-    return z
-
-
-def z_function_optimized(s:str) -> list:
-    """
-        This is algorithm for computing z function.
-        Algorithm returns collection z.
-        z[i] - наибольший общий префикс строки s и её i-го суффикса 
-        This is optimized realisation of this algorithm.
-
-    Complexity: O(n)
-
-    Args:
-        s (str): input string
-
-    Returns:
-        list: collection z
-    """
-    n = len(s)
-    z = [0] * n
-    l = 0
-    r = 0
-    for i in range(1, n):
-        if i <= r:
-            z[i] = min(r - i + 1, z[i - l])
-        while i + z[i] < n and s[z[i]] == s[i + z[i]]:
-            z[i] += 1
-        if (i + z[i] - 1 > r):
-            l = i
-            r = i + z[i] - 1
-    return z
-
-
-def strCompession_Zfunc(s:str) -> str:
-    """
-        This algorithm find string such string t that s = t + t + ... + t.
-        This algorithm uses Z-function optimized realisation.
-
-    Complexity: O(n)
-
-    Args:
-        s (str): input string
-
-    Returns:
-        str: compressed string
-    """
-    n = len(s)
-    z = z_function_optimized(s)
-    for i in range(n):
-        if i + z[i] == n and n % i == 0:
-            t = s[:i]
-            return t
-    return None
-
-
-def strCountDifferentSubstr_Zfunc(s:str) -> int:
-    """
-        This algorithm find for you count of different substrings in string s by Z-function.
-    
-    Complexity: O(n^2)
-
-    Args:
-        s (str): input string
-
-    Returns:
-        int: count of different substrings
-    """
-    def z_func(s:str):
-        n = len(s)
-        z = [0] * n
-        l = 0
-        r = 0
-        z_max = 0
-        for i in range(1, n):
-            if i <= r:
-                z[i] = min(r - i + 1, z[i - l])
-            while i + z[i] < n and s[z[i]] == s[i + z[i]]:
-                z[i] += 1
-            if (i + z[i] - 1 > r):
-                l = i
-                r = i + z[i] - 1
-            if z_max < z[i]:
-                z_max = z[i]
-        return z_max
-
-    n = len(s)
-    string = ""
-    count = 0
-    for i in range(n):
-        string += s[i]
-        length = i + 1
-        z = z_func(string)
-        count += length - z
-    return count
-
-
-def strFind_naive(pattern:str, text:str) -> int:
-    """
-       This is naive realisation algorithm
-       for finding a substring in a string
-
-    Complexity: O((n - m + 1)m) where n = len(text), m = len(pattern)
-
-    Args:
-        pattern (str): pattern
-        text (str): text for finding matches
-
-    Returns:
-        int: count of matches
-    """
-    s = 0
-    m = len(pattern)
-    n = len(text)
-    for i in range(n-m+1):
-        j = 0
-        flag = True
-        while flag and j < m:
-            if text[i+j] != pattern[j]:
-                flag = False
-            j += 1
-        if flag:
-            s += 1
-    return s
-
-
-def strFind_RabinKarp(pattern:str, text:str, q:int = 101, d:int = 256, table:dict = None) -> int:
-    """This is Rabin-Karp algorithm for
-       finding a substring in a string
-
-    Complexity:
-                Preprocessing: θ(m)
-                Comparisons:   O((n - m + 1)m)
-                Total:         θ(m) + O((n - m + 1)m)
-    Args:
-        pattern (str): pattern
-        text (str): text for finding matches
-        q (int): prime number. dq should fit into a computer word
-        d (int): alphabet power
-        table (dict): comparison table. It's must look like {'a': 0, 'b': 1, 'c': 2, ...}
-    Returns:
-        int: count of matches
-    """
-    m = len(pattern)
-    n = len(text)
-    h = 1
-    p = 0
-    t = 0
-    count = 0
-
-    # h = d^(m-1) mod q
-    for i in range(m-1):
-        h = (h * d) % q
-
-    if d == 256 and table is None:
-        # creating p and t_0
-        for i in range(m):
-            p = (ord(pattern[i]) + d * p) % q
-            t = (ord(text[i]) + d * t) % q
-
-        for s in range(n - m + 1):
-            if p == t:
-                j = 0
-                flag = True
-                while flag and j < m:
-                    if text[s+j] != pattern[j]:
-                        flag = False
-                    j += 1
-                if flag:
-                    count += 1
-            if s < n - m:
-                # getting t_s+1 throught t_s
-                t = (d * (t - h * ord(text[s])) + ord(text[s + m])) % q
-                if t < 0:
-                    t = t + q
-        return count
-    else:
-        # creating p and t_0
-        for i in range(m):
-            p = (table(pattern[i]) + d * p) % q
-            t = (table(text[i]) + d * t) % q
-
-        for s in range(n - m + 1):
-            if p == t:
-                j = 0
-                flag = True
-                while flag and j < m:
-                    if text[s+j] != pattern[j]:
-                        flag = False
-                    j += 1
-                if flag:
-                    count += 1
-            if s < n - m:
-                # getting t_s+1 throught t_s
-                t = (d * (t - h * table(text[s])) + table(text[s + m])) % q
-                if t < 0:
-                    t = t + q
-        return count
-
-
-def strFind_Zfunc(pattern:str, text:str) -> int:
-    """
-       This is realisation of algorithm
-       for finding a substring in a string
-       with using Zfunction
-    
-    Complexity: O(len(pattern) + len(text))
-
-    Args:
-        pattern (str): pattern
-        text (str): text for finding matches
-
-    Returns:
-        int: count of matches
-    """
-    s = pattern + "#" + text
-    z = z_function_optimized(s)
-    p = len(pattern)
-    count = 0
-    for i in range(len(text)):
-        if z[i + p + 1] == p:
-            count += 1
-    return count
-
-
-def strFind_KMP(pattern:str, text:str) -> int:
-    """
-       This is realisation of Knuth-Morris-Pratt algorithm
-       for finding a substring in a string.
-       This algorithm uses prefix_function_optimized
-       function from this library.
-    
-    Time complexity: O(n + m) where n = len(pattern), m = len(text)
-    Memory complexity: O(n + m)
-
-    Args:
-        pattern (str): pattern
-        text (str): text for finding matches
-
-    Returns:
-        int: count of matches
-    """
-    n = len(pattern)
-    w = pattern + '#' + text
-    p = prefix_function_optimized(w)
-    count = 0
-    for i in range(n + 1, len(p)):
-        if p[i] == n:
-            count += 1
-    return count
-
-
-def strFind_KMP_bonus(pattern:str, text:str) -> int:
-    """
-       This is realisation of Knuth-Morris-Pratt algorithm
-       for finding a substring in a string.
-       This algorithm uses prefix_function_optimized
-       function from this library.
-       This realisation have memory complexity: O(n)
-    
-    Time complexity: O(n + m) where n = len(pattern), m = len(text)
-    Memory complexity: O(n)
-
-    Args:
-        pattern (str): pattern
-        text (str): text for finding matches
-
-    Returns:
-        int: count of matches
-    """
-    n = len(pattern)
-    m = len(text)
-    P = prefix_function_optimized(pattern)
-    # entries = [] // uncommented commented strings for finding entries
-    i, j, count = 0, 0, 0
-    while i < m:
-        if text[i] == pattern[j]:
-            if j == n - 1:
-                # entries.append(i - n + 1)
-                count += 1
-                j = P[j]
-            else:
-                j += 1
-            i += 1
-        elif j:
-            j = P[j-1]
-        else:
-            i += 1
-    return count
-
-
 
 
 

@@ -1,32 +1,46 @@
 from alghoritms import *
-# s = "ababababababab"
-# s = 'abcabcd'
-# print(prefix_function_naive(s))
-# print(prefix_function_optimized(s))
-# print(strCountDifferentSubstr_Zfunc(s))
-# s = "aaabaab"
-# print(z_function_optimized(s))
-# s = "ababababababab"
-# print(strCountDifferentSubstr_Zfunc(s))
-# s = "ababababababab"
-# print(strCompession_Zfunc(s))
-# pattern = "pa"
-# text = "parapapa"
-# text1 = "parapapaparapraspaarpapara"
-# print(strFind_naive(pattern, text))
-# print(strFind_naive(pattern, text1))
+# b = ()
+# print(isinstance(b, tuple))
+# print('a' != b)
+# d = Hash_table()
+# d.insert(('abc', 12))
+# d.insert(('bm', 1))
+# d.insert(('gm', 2))
+# d.insert(('vm', 3))
+# d.insert(('cm', 4))
+# d.insert(('lm', 5))
+# print(d)
+# print(d.n)
+# print(d.m)
+# print(d.alpha)
+# d.insert(('wm', 6))
+# d.insert(('om', 7))
+# d.insert(('mm', 8))
+# print(d)
+# print(d.n)
+# print(d.m)
+# print(d.alpha)
 # print(' ')
-# print(strFind_RabinKarp(pattern, text))
-# print(strFind_RabinKarp(pattern, text1))
-# print(' ')
-# print(strFind_Zfunc(pattern, text))
-# print(strFind_Zfunc(pattern, text1))
-# a = [2, 5, 8, 13, 21, 27, 35]
-# print(binary_search_imaginary(a, 28))
-# a = Heap([4, 1, 3, 2, 16, 9, 10, 14, 8, 7], max_heap=False)
-# print(a.A)
-# a = [4, 1, 3, 2, 16, 9, 10, 14, 8, 7]
-# print(heapsort(a, reverse=True))
+# print(d.get_element('wm'))
+# d.delete('wm')
+# print(d)
+# print(d.get_element('ym'))
+# print("Can't to delete a non-existent key")
+# s = 'asdjkbdsf'
+# print(strHash(s))
+# from random import randint
+# n = 0
+# lst = [None] * n
+# print(lst)
+# p = 3
+# def some_function(key):
+#     if isinstance(key, float):
+#         key = int(key)
+#     return key + 1
+# a = 1.1
+# print(some_function(a))
+# print(a)
+# print(randint(1, p - 1))
 # print(modular_exponentiation(7, 560, 561))
 # print(go_to_binary(10))
 # print(bin(10)[2:])
