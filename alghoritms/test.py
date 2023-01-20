@@ -1,4 +1,24 @@
 from alghoritms import *
+# d = Hash_table()
+# d.insert(('abc', 12))
+# d.insert(('bm', 1))
+# d.insert(('gm', 2))
+# print(d)
+# print(d['abc'])
+# d['abc'] = 10
+# print(d['abc'])
+# print(d.table)
+
+
+try:
+    a = []
+    print(a[-1])
+except IndexError:
+    print('Nononono ', a)
+
+
+
+
 # b = ()
 # print(isinstance(b, tuple))
 # print('a' != b)

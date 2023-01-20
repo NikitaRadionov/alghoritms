@@ -796,16 +796,17 @@ class Hash_table:
     def __init__(self, *args):
         self.n = len(args)
         self.count = self.n
+        self.__P = 701
+        self.__A = randint(1, self.__P - 1)
+        self.__B = randint(0, self.__P - 1)
         if self.n == 0:
             self.m = 10
             self.table = [None] * self.m
             self.alpha = 0
-            self.__flag = False
         else:
             self.m = 2 * self.n
             self.table = [None] * self.m
             self.alpha = self.n / self.m
-            self.__flag == False
             for element in args:
                 key = element[0]
                 self.insert(element)
@@ -818,17 +819,12 @@ class Hash_table:
         if isinstance(key, str):
             key = strHash(key)
 
-        if not self.__flag:
-            self.__P = 701
-            self.__A = randint(1, self.__P - 1)
-            self.__B = randint(0, self.__P - 1)
-            self.__flag = True
-
         def h(key):
             return ((self.__A * key + self.__B) % self.__P ) % self.m
 
         def g(key):
             return 1 + key % (self.m - 1)
+
         return (h(key) + i * g(key)) % self.m
 
 
@@ -859,27 +855,34 @@ class Hash_table:
             default(x)
 
 
-    def get_element(self, key:int | float | bool | str):
-        i = 0
-        x = ((), ())
-        while key != x[0]:
-            x = self.table[self.__hash_func(key, i)]
-            if x is None:
-                raise KeyError('Inccorect key has been put')
-            i += 1
-        return x[1]
+    def __setitem__(self, key:int | float | bool | str, value):
+        try:
+            ikey = self._find(key)[0]
+            self.table[ikey] = value
+        except KeyError:
+            self.insert((key, value))
 
 
-    def delete(self, key:int | float | bool | str):
-        const = "DELETED"
+    def _find(self, key:int | float | bool | str):
         i = 0
         x = ((), ())
         while key != x[0]:
             ikey = self.__hash_func(key, i)
             x = self.table[ikey]
             if x is None:
-                raise KeyError("Can't to delete a non-existent key")
+                raise KeyError('Inccorect key has been put')
             i += 1
+        return (ikey, x[1])
+
+
+    def __getitem__(self, key:int | float | bool | str):
+        value = self._find(key)[1]
+        return value
+
+
+    def delete(self, key:int | float | bool | str):
+        const = "DELETED"
+        ikey = self._find(key)
         self.table[ikey] = const
         self.count -= 1
 
