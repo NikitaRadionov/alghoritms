@@ -855,14 +855,6 @@ class Hash_table:
             default(x)
 
 
-    def __setitem__(self, key:int | float | bool | str, value):
-        try:
-            ikey = self._find(key)[0]
-            self.table[ikey] = value
-        except KeyError:
-            self.insert((key, value))
-
-
     def _find(self, key:int | float | bool | str):
         i = 0
         x = ((), ())
@@ -873,6 +865,14 @@ class Hash_table:
                 raise KeyError('Inccorect key has been put')
             i += 1
         return (ikey, x[1])
+
+
+    def __setitem__(self, key:int | float | bool | str, value):
+        try:
+            ikey = self._find(key)[0]
+            self.table[ikey] = (key, value)
+        except KeyError:
+            self.insert((key, value))
 
 
     def __getitem__(self, key:int | float | bool | str):
@@ -888,14 +888,20 @@ class Hash_table:
 
 
     def __str__(self):
+        def get_string(s:int | float | bool | str):
+            if isinstance(s, str):
+                return '\'' + s + '\''
+            if isinstance(s, int | float | bool):
+                return str(s)
+
         string = "{ "
         c = 0
         for x in self.table:
             if not (x is None) and not (x == "DELETED"):
                 if c == self.count - 1:
-                    string += str(x[0]) + " : " + str(x[1]) + " "
+                    string += get_string(x[0]) + " : " + get_string(x[1]) + " "
                 else:
-                    string += str(x[0]) + " : " + str(x[1]) + ", "
+                    string += get_string(x[0]) + " : " + get_string(x[1]) + ", "
                 c += 1
         string += "}"
         return string

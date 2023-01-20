@@ -8,13 +8,21 @@ from alghoritms import *
 # d['abc'] = 10
 # print(d['abc'])
 # print(d.table)
+d = Hash_table()
+d['hello'] = 'World'
+d[24] = 54
+print(d)
+print(d['hello'])
+print('')
+d['hello'] = 'Nikita'
+print(d)
+print(d['hello'])
 
-
-try:
-    a = []
-    print(a[-1])
-except IndexError:
-    print('Nononono ', a)
+# try:
+#     a = []
+#     print(a[-1])
+# except IndexError:
+#     print('Nononono ', a)
 
 
 
