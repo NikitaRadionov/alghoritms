@@ -718,6 +718,163 @@ def strHash(s:str, p:int = 31) -> int:
     return horners_rule(a, p)
 
 
+#graphs
+def get_graph_listadjacency(lst:list, numbers:bool=True) -> list | dict:
+    """
+        This algorithm for create a list of adjancency by list of edges.
+        Edges in list of edges a must be a tuples of this form (a, b).
+        (a, b) means that the edge starts in vertex a and ends in vertex b.
+        By default I suggest that a and b is int such that a,b >= 0.
+        If a and b is not int set numbers=False and you get a dict of adjancency.
+        If you set numbers=False then I suggest that a,b is not mutable
+        and using this function you will get an adjacency dictionary.
+        I suggest that you are using this algorithm for undirected unweighted graph but
+        this also works for directed unweighted graph
+
+    Complexity: O(m) where m - count of edges in graph
+
+    Args:
+        a (list): list of edges. Edges must be a tuples of this form (a, b).
+        numbers (bool, optional): set False if a or b is not int such that a,b >= 0. Defaults to True.
+
+    Returns:
+        list | dict: list of adjancency | dict of adjancency
+    """
+    if numbers:
+        n = 0
+        for (a, b) in lst:
+            mx = max(a, b)
+            if mx > n:
+                n = mx
+        adjlst = [[] for i in range(n + 1)]
+        for (a, b) in lst:
+            adjlst[a].append(b)
+        return adjlst
+    else:
+        d = {}
+        for (a, b) in lst:
+            if not (a in d.keys()):
+                d[a] = []
+            d[a].append(b)
+        return d
+
+
+def get_graph_matrixadjacency(lst:list, numbers=True) -> list | dict:
+    """
+        This algorithm for create a matrix of adjancency by list of edges.
+        Edges in list of edges a must be a tuples of this form (a, b).
+        (a, b) means that the edge starts in vertex a and ends in vertex b.
+        By default I suggest that a and b is int such that a,b >= 0.
+        If a and b is not int set numbers=False and you get a dict of adjancency.
+        If you set numbers=False then I suggest that a,b is not mutable
+        and using this function you will get an adjacency dictionary.
+        I suggest that you are using this algorithm for undirected unweighted graph but
+        this also works for directed unweighted graph
+
+    Complexity: O(m^2) where m - count of edges
+
+    Args:
+        lst (list): list of edges. Edges must be a tuples of this form (a, b).
+        numbers (bool, optional): set False if a or b is not int such that a,b >= 0. Defaults to True.
+
+    Returns:
+        list | dict: matrix of adjancency | matrix-dict of adjancency
+    """
+    if numbers:
+        n = 0
+        for (a, b) in lst:
+            mx = max(a, b)
+            if mx > n:
+                n = mx
+        matrix = [[0 for j in range(n + 1)] for i in range(n + 1)]
+        for (a, b) in lst:
+            matrix[a][b] = 1
+        return matrix
+    else:
+        d = {a: {a: 0 for (a, b) in lst} for (a, b) in lst}
+        for (a, b) in lst:
+            d[a][b] = 1
+        return d
+
+
+def get_weightgraph_listadjacency(lst:list, numbers:bool=True) -> list | dict:
+    """
+        This algorithm for create a list of adjancency by list of edges.
+        Edges in list of edges a must be a tuples of this form (a, b, w).
+        (a, b, w) means that the edge starts in vertex a and ends in vertex b and edge have weight w.
+        By default I suggest that a and b is int such that a,b >= 0.
+        If a and b is not int set numbers=False and you get a dict of adjancency.
+        If you set numbers=False then I suggest that a,b is not mutable
+        and using this function you will get an adjacency dictionary.
+        I suggest that you are using this algorithm for undirected unweighted graph but
+        this also works for directed weighted graph
+
+    Complexity: O(m) where m is count of edges
+
+    Args:
+        lst (list): list of edges. Edges must be a tuples of this form (a, b, w). w - weight
+        numbers (bool, optional): set False if a or b is not int such that a,b >= 0. Defaults to True.
+
+    Returns:
+        list | dict: list of adjancency | dict of adjancency
+    """
+    if numbers:
+        n = 0
+        for (a, b, w) in lst:
+            mx = max(a, b)
+            if mx > n:
+                n = mx
+        adjlst = [[] for i in range(n + 1)]
+        for (a, b, w) in lst:
+            adjlst[a].append([b, w])
+        return adjlst
+    else:
+        d = {}
+        for (a, b, w) in lst:
+            if not (a in d.keys()):
+                d[a] = []
+            d[a].append([b, w])
+        return d
+
+
+def get_weightgraph_matrixadjacency(lst:list, numbers=True) -> list | dict:
+    """
+        This algorithm for create a matrix of adjancency by list of edges.
+        Edges in list of edges a must be a tuples of this form (a, b, w).
+        (a, b, w) means that the edge starts in vertex a and ends in vertex b and edge have weight w..
+        By default I suggest that a and b is int such that a,b >= 0.
+        If a and b is not int set numbers=False and you get a dict of adjancency.
+        If you set numbers=False then I suggest that a,b is not mutable
+        and using this function you will get an adjacency dictionary.
+        I suggest that you are using this algorithm for undirected unweighted graph but
+        this also works for directed weighted graph
+
+    Complexity: O(m^2) where m - count of edges
+
+    Args:
+        lst (list): list of edges. Edges must be a tuples of this form (a, b, w).
+        numbers (bool, optional): set False if a or b is not int such that a,b >= 0. Defaults to True.
+
+    Returns:
+        list | dict: matrix of adjancency | matrix-dict of adjancency
+    """
+    if numbers:
+        n = 0
+        for (a, b, w) in lst:
+            mx = max(a, b)
+            if mx > n:
+                n = mx
+        matrix = [[-1 for j in range(n + 1)] for i in range(n + 1)]
+        for (a, b, w) in lst:
+            matrix[a][b] = w
+        return matrix
+    else:
+        d = {a: {a: -1 for (a, b) in lst} for (a, b) in lst}
+        for (a, b, w) in lst:
+            d[a][b] = w
+        return d
+
+
 # data structures
 class Heap:
     """
@@ -801,11 +958,11 @@ class Hash_table:
         self.__B = randint(0, self.__P - 1)
         if self.n == 0:
             self.m = 10
-            self.table = [None] * self.m
+            self.table = [None for i in range(self.m)]
             self.alpha = 0
         else:
             self.m = 2 * self.n
-            self.table = [None] * self.m
+            self.table = [None for i in range(self.m)]
             self.alpha = self.n / self.m
             for element in args:
                 key = element[0]
@@ -1190,7 +1347,7 @@ def heapsort(lst:list, reverse:bool=False) -> list:
 
 
 if __name__ == "__main__":
-    s = 'babababab'
-    sub = 'bab'
-    print(strFind_KMP(sub, s))
-    print(strFind_KMP_bonus(sub, s))
+    lst_of_edges = [(0, 1, 1), (1, 0, 2), (1, 2, 1), (1, 3, 2), (2, 4, 2), (3, 4, 5), (4, 1, 8)]
+    matrix = get_weightgraph_matrixadjacency(lst_of_edges)
+    for i in matrix:
+        print(i)
