@@ -826,14 +826,14 @@ def get_weightgraph_listadjacency(lst:list, numbers:bool=True) -> list | dict:
                 n = mx
         adjlst = [[] for i in range(n + 1)]
         for (a, b, w) in lst:
-            adjlst[a].append([b, w])
+            adjlst[a].append((b, w))
         return adjlst
     else:
         d = {}
         for (a, b, w) in lst:
             if not (a in d.keys()):
                 d[a] = []
-            d[a].append([b, w])
+            d[a].append((b, w))
         return d
 
 
@@ -873,6 +873,105 @@ def get_weightgraph_matrixadjacency(lst:list, numbers=True) -> list | dict:
         for (a, b, w) in lst:
             d[a][b] = w
         return d
+
+
+def get_empty_color(lst:list | dict) -> list | dict:
+    """
+        This is helper function for dfs algorithms.
+        With her help dfs algorithms gets an empty list | dict of vertex colors.
+
+    Complexity: O(n) where n - count of vertex in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+
+    Raises:
+        TypeError: Wrong arguments
+
+    Returns:
+        list | dict: list/dict of vertex colors
+    """
+
+    if isinstance(lst, list):
+        n = len(lst)
+        color = [0 for i in range(n)]
+        return color
+
+    if isinstance(lst, dict):
+        color = {}
+        for obj in lst.keys():
+            color[obj] = 0
+        return color
+
+    raise TypeError("Wrong arguments")
+
+
+def graph_dfs(lst:list | dict, color:list | dict, u:Any, weight:bool = False):
+    """
+        This is algorithm of depth-walk search which start from vertex of undirected/directed unweight graph.
+        I suggest that you are using for this algorithm a list/dict of adjacency which you
+        can create by a function get_graph_listadjacency.
+        color[i] must be one of this int - 0, 1, 2.
+        color must be the same type as lst.
+        u must be not mutable
+
+    Complexity: O(m) where m - count of edges in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+        color (list | dict): color of vertex
+        u (Any): vertex from which dfs is statring
+        weight (bool): set weight = True if your graph are weighted. Defaults to False.
+    """
+    if weight:
+        color[u] = 1
+        for (v, w) in lst[u]:
+            if color[v] == 0:
+                graph_dfs(lst, color, v, weight)
+        color[u] = 2
+    else:
+        color[u] = 1
+        for v in lst[u]:
+            if color[v] == 0:
+                graph_dfs(lst, color, v)
+        color[u] = 2
+
+
+def graph_dodfs(lst:list | dict, weight:bool = False) -> list | dict:
+    """
+        This is algorithm of depth-walk search on undirected/directed unweight graph.
+        I suggest that you are using for this algorithm a list/dict of adjacency which you
+        can create by a function get_graph_listadjacency.
+
+    Complexity: O(n + m)
+                where n - count of vertex in graph
+                      m - count of edges in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+        weight (bool): set weight = True if your graph are weighted. Defaults to False.
+
+    Raises:
+        TypeError: Wrong arguments
+
+    Returns:
+        list | dict: list/dict of colors - the result of walking
+    """
+
+    color = get_empty_color(lst)
+
+    if isinstance(lst, list):
+        for u in range(len(lst)):
+            graph_dfs(lst, color, u, weight)
+        return color
+
+    if isinstance(lst, dict):
+        for u in lst.keys():
+            graph_dfs(lst, color, u, weight)
+        return color
+
+    raise TypeError("Wrong arguments")
+
 
 
 # data structures
@@ -1347,7 +1446,11 @@ def heapsort(lst:list, reverse:bool=False) -> list:
 
 
 if __name__ == "__main__":
-    lst_of_edges = [(0, 1, 1), (1, 0, 2), (1, 2, 1), (1, 3, 2), (2, 4, 2), (3, 4, 5), (4, 1, 8)]
-    matrix = get_weightgraph_matrixadjacency(lst_of_edges)
-    for i in matrix:
-        print(i)
+    s = """
+        Welcome to the my library of algorithms !
+        Here you can find implementations of most
+        fundamental algorithms and data structures.
+        For each algorithm, you can find a brief
+        description of it, as well Time and Memory Complexity.
+    """
+    print(s)

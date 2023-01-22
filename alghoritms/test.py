@@ -1,4 +1,34 @@
 from alghoritms import *
+
+
+
+
+
+
+
+
+# lst_of_weightedges = [('a', 'b', 1), ('b', 'a', 2), ('b', 'c', 1), ('b', 'd', 2), ('c', 'e', 2), ('d', 'e', 5), ('e', 'b', 8)]
+# lst_of_edges = [('a', 'b'), ('b', 'a'), ('b', 'c'), ('b', 'd'), ('c', 'e'), ('d', 'e'), ('e', 'b'), ('x', 'y'), ('y', 'z'), ('z', 'v'), ('v', 'x')]
+# adj = get_graph_listadjacency(lst_of_edges, numbers=False)
+# color = get_empty_color(adj)
+# graph_dfs(adj, color, 'a')
+# print(color)
+# lst_of_edges = [(0, 1), (1, 0), (1, 2), (1, 3), (2, 1), (2, 4), (3, 1), (3, 4), (4, 1), (4, 2), (4, 3)]
+# lst_adjacency = get_graph_listadjacency(lst_of_edges, numbers=False)
+# color = [0 for i in range(5)]
+# print(lst_adjacency)
+# print(graph_dodfs(lst_adjacency))
+# u = 1
+# graph_dfs(lst_adjacency, color, u)
+# print(graph_dodfs(lst_adjacency))
+# matrix = get_weightgraph_matrixadjacency(lst_of_edges)
+# for i in matrix:
+#     print(i)
+
+
+
+
+
 # lst_of_adjancency = get_weightgraph_listadjacency(lst_of_edges)
 # print(lst_of_adjancency)
 # print('')
