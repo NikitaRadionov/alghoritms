@@ -1,6 +1,7 @@
 import time
 from typing import Any
 from random import randint
+from queue import Queue, PriorityQueue
 #This library provides you with implementations of fundamental algorithms and data structures
 #For each entity are presented Time and Memory complexity. If there is no inside entity words Time and Memory
 #then inside must be word Complexity - it's mean Time complexity
@@ -972,6 +973,196 @@ def graph_dodfs(lst:list | dict, weight:bool = False) -> list | dict:
 
     raise TypeError("Wrong arguments")
 
+
+def graph_bfs(lst:list | dict, s:Any, weight:bool = False) -> tuple:
+    """
+        This algorithm of bfs on graph.
+        Input graph must be unweighted
+        This algorithm returns tuple of this form (visited, d, p)
+        visited - array of visited vertexes
+        d - array of shortest paths from vertex s. d[v] - shortest path from s to v
+        p - array of parrents. p[v] - parrent of vertex v
+
+    Complexity: O(n + m)
+                where n - count of vertex
+                      m - count of edges
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+        s (Any): Start vertex
+        weight (bool, optional): set True, if you want to get expirement. Defaults to False.
+
+    Returns:
+        tuple: (visited, d, p)
+    """
+
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not ( condition_list or condition_dict):
+        raise TypeError('Wrond arguments')
+
+    q = Queue()
+    q.put(s)
+
+    if condition_list:
+        n = len(lst)
+        visited = [False for i in range(n)]
+        p = [None for i in range(n)]
+        d = [-1 for i in range(n)]
+    else:
+        visited, p, d = {}, {}, {}
+        for obj in lst.keys():
+            visited[obj] = False
+            p[obj] = None
+            d[obj] = -1
+
+    visited[s] = True
+    d[s] = 0
+
+    while not (q.empty()):
+        v = q.get()
+        if weight:
+            for (u, w) in lst[v]:
+                if not visited[u]:
+                    q.put(u)
+                    visited[u] = True
+                    d[u] = d[v] + w
+                    p[u] = v
+        else:
+            for u in lst[v]:
+                if not visited[u]:
+                    q.put(u)
+                    visited[u] = True
+                    d[u] = d[v] + 1
+                    p[u] = v
+
+    return (visited, d, p)
+
+
+def dejcstra(lst:list | dict, s:Any, max_weight:Any = None) -> list | dict:
+    """
+        This is Dejcsta's algorithm for findind shortest paths from s to other vertexes in weighted graph.
+        Attention: weight of each edge must be >= 0.
+        If you know the maximal weight of edge in graph (let it be max), set max_weight = max + 1
+
+        Algotihm:
+            Start:
+                d[s] = 0 , a[v] = 0
+                for each v in V\{s}: d[v] = infinity
+             Basis:
+                1. Choose v:
+                    v = min{d[u]: a[u] == 0}
+                2. a[v] = 1
+                3. decompression:
+                    1. for each (v, u, w):
+                        d[u] = min(d[u], d[v] + w)
+
+    Complexity: O(n^2) where n - count vertexes in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+        s (Any): start vertex. s is not mutable
+        max_weight (Any, optional): max weight + 1. Defaults to None.
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list | dict: array of minimal weight paths from vertex s to other vertexes in graph
+    """
+
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not ( condition_list or condition_dict):
+        raise TypeError('Wrong arguments')
+
+    max_weight = max_weight if not ( max_weight is None ) else 1.8446744e+19
+    n = len(lst)
+
+    if condition_list:
+        a = [False for i in range(n)]
+        d = [max_weight for i in range(n)]
+    else:
+        a, d = {}, {}
+        for i in lst.keys():
+            a[i] = 0
+            d[i] = max_weight
+
+    d[s] = 0
+
+    array = range(n) if condition_list else lst.keys()
+    for i in range(n):
+        v = -1 if condition_list else None
+        for u in array:
+            if (not a[u]) and ( (v in (-1, None)) or d[u] < d[v]):
+                v = u
+
+        a[v] = True
+
+        for (u, w) in lst[v]:
+            d[u] = min(d[u], d[v] + w)
+
+    return d
+
+
+def dejcstra_heap(lst:list | dict, s:Any, max_weight:Any = None) -> list | dict:
+    """
+        This is Dejcsta's algorithm for findind shortest paths from s to other vertexes in weighted graph.
+        Attention: weight of each edge must be >= 0.
+        If you know the maximal weight of edge in graph (let it be max), set max_weight = max + 1
+
+        This is improved version of this algorithm.
+        For finding v = min{d[u]: a[u] == 0} is using priority queue which based on heap
+
+    Complexity: O(nlogn + m)
+                where n - count of vertex in graph
+                      m - count of edges in graph
+
+    Args:
+        lst (list | dict): _description_
+        s (Any): _description_
+        max_weight (Any, optional): _description_. Defaults to None.
+
+    Raises:
+        TypeError: _description_
+
+    Returns:
+        list | dict: _description_
+    """
+
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not ( condition_list or condition_dict):
+        raise TypeError('Wrong arguments')
+
+    max_weight = max_weight if not ( max_weight is None ) else 1.8446744e+19
+    n = len(lst)
+
+    if condition_list:
+        d = [max_weight for i in range(n)]
+
+    else:
+        d = {}
+        for i in lst.keys():
+            d[i] = max_weight
+
+    d[s] = 0
+
+    q = PriorityQueue()
+    q.put((0, s))
+    while not q.empty():
+        (cur_d, v) = q.get()
+        if cur_d > d[v]:
+            continue
+        for (u, w) in lst[v]:
+            if d[u] > d[v] + w:
+                d[u] = d[v] + w
+                q.put((d[u], u))
+
+    return d
 
 
 # data structures

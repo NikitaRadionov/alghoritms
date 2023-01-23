@@ -1,8 +1,59 @@
 from alghoritms import *
+from queue import PriorityQueue
+# q = PriorityQueue()
+
+# q.put((1, 2))
+# (a, b) = q.get()
+# print(a)
+# print(b)
+
+# d = int(1.8446744e+19)
+# print(type(d))
+# q = PriorityQueue()
+# q.put((2, 'A'))
+# q.put((1, 'B'))
+# print(q.get())
 
 
 
 
+lst_of_weightedges1 = [
+    (0, 1, 1), (1, 0, 1), (1, 2, 1), (1, 3, 1),
+    (1, 4, 1), (2, 1, 1), (2, 4, 1), (3, 1, 1),
+    (3, 4, 1), (4, 1, 1), (4, 2, 1), (4, 3, 1),
+    (4, 5, 1), (5, 4, 1), (5, 6, 1), (6, 5, 1)
+    ]
+lst_of_weightedges2 = [('a', 'b', 1), ('b', 'a', 2), ('b', 'c', 1), ('b', 'd', 2), ('c', 'e', 20), ('d', 'e', 5), ('e', 'b', 8), ('x', 'y', 0), ('y', 'x', 0)]
+adj1 = get_weightgraph_listadjacency(lst_of_weightedges1)
+adj2 = get_weightgraph_listadjacency(lst_of_weightedges2 ,numbers=False)
+print(dejcstra_heap(adj1, 1))
+print(dejcstra_heap(adj2, 'c'))
+
+# lst_of_edges = [(0, 1), (1, 0), (1, 2), (1, 3), (1, 4), (2, 1), (2, 4), (3, 1), (3, 4), (4, 1), (4, 2), (4, 3), (4, 5), (5, 4), (5, 6), (6, 5)]
+# adj = get_weightgraph_listadjacency(lst_of_weightedges, numbers=False)
+# print(adj)
+# print(len(adj))
+# print(graph_bfs(adj, 'a', weight=True))
+
+
+
+# from queue import Queue
+# q = Queue()
+# q.get() ---- pop()
+# q.put(element) --- push(element)
+# q.qsize() --- len(q)
+# q.empty() --- True when q is empty, otherwise False
+# print(dir(q))
+# print(' ')
+# print(q.empty())
+# q.put('a')
+# print(q.empty())
+# q.put(1)
+# print(repr(q))
+# print(q.get())
+# print(q.qsize())
+# print(q.get())
+# print(q.qsize())
 
 
 
