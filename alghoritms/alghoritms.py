@@ -1418,6 +1418,162 @@ def dejcstra_heap(lst:list | dict, s:Any, max_weight:Any = None) -> list | dict:
     return d
 
 
+def prims_algorithm_naive(lst:list) -> list:
+    """
+        This is naive realisation of Prim's algorithm for finding minimal island.
+        Minimal island is such spanning tree of graph that sum of edge weights is minimal
+        Input: Connected weighted undirected graph
+        Output: Minimal island
+
+    Complexity: O(nm)
+                where n - count of vertexes in graph
+                      m - count of edges in graph
+
+    Args:
+        lst (list): list of edges
+
+    Raises:
+        TypeError: Wrong arguments
+
+    Returns:
+        list: list of edges of minimal island
+    """
+
+    condition_list = isinstance(lst, list)
+    condition_element = isinstance(lst[0], tuple)
+    condition_numbers = isinstance(lst[0][0], int)
+
+    if not ( condition_list and condition_element):
+        raise TypeError('Wrong arguments')
+
+    adj_lst = get_weightgraph_listadjacency(lst, numbers=condition_numbers)
+
+    inf = 1.8446744e+19
+    n = len(adj_lst)
+    m = len(lst)
+    island = []
+    used = [0 for i in range(n)] if condition_numbers else {obj: 0 for obj in adj_lst.keys()}
+    element = 0 if condition_numbers else lst[0][0]
+
+    used[element] = 1
+    for i in range(n - 1):
+        isl_w, isl_a, isl_b = inf, -1, -1
+        for j in range(m):
+            a, b, w = lst[j]
+            if isl_w > w and used[a] != 0 and used[b] == 0:
+                isl_w = w
+                isl_a = a
+                isl_b = b
+        used[isl_b] = 1
+        island.append((isl_a, isl_b, isl_w))
+        island.append((isl_b, isl_a, isl_w))
+
+    return island
+
+
+def prims_algorithm_optimized_square(lst:list | dict) -> list:
+    """
+        This is optimized realisation of prims algorithm for finding minimal island.
+        Minimal island is such spanning tree of graph that sum of edge weights is minimal
+        Input: Connected weighted undirected graph
+        Output: Minimal island
+
+        Use this algorithm if you have a dense graph
+
+    Complexity: O(n^2)
+                where n - count of vertexes in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list: list of edges of minimal island
+    """
+
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not (condition_list or condition_dict):
+        raise TypeError('Wrong Arguments')
+
+
+    inf = 1.8446744e+19
+    n = len(lst)
+    island = []
+    used = [0 for i in range(n)] if condition_list else {obj: 0 for obj in lst.keys()}
+    min_edge = [inf for i in range(n)] if condition_list else {obj: inf for obj in lst.keys()}
+    start = 0 if condition_list else next(iter(lst.keys()))
+    min_edge[start] = 0
+    best_edge = used.copy()
+
+    array = range(n) if condition_list else lst.keys()
+
+    for i in range(n):
+        v = -1
+        for u in array:
+            if used[u] == 0 and (v == -1 or min_edge[u] < min_edge[v]):
+                v = u
+
+        used[v] = 1
+
+        if v != start:
+            island.append((v, best_edge[v], min_edge[v]))
+
+        for edge in lst[v]:
+            u = edge[0]
+            w = edge[1]
+            if w < min_edge[u]:
+                min_edge[u] = w
+                best_edge[u] = v
+
+    return island
+
+
+def prims_algorithm_optimized_log(lst: list) -> list:
+    """
+        This if optimized realisation of Prim's algorithm for finding minimal island.
+        Minimal island is such spanning tree of graph that sum of edge weights is minimal
+        Input: Connected weighted undirected graph
+        Output: Minimal island
+        In this realisation is used priority queue for finding minimal weight edge in each step
+
+        Use this algorithm if you have a sparse graph
+
+    Complexity: O(mlogn)
+                where n - count of vertexes in graph
+                      m - count of edges in graph
+
+    Args:
+        lst (list): _description_
+
+    Raises:
+        TypeError: _description_
+
+    Returns:
+        list: _description_
+    """
+    condition_list = isinstance(lst, list)
+    condition_element = isinstance(lst[0], tuple)
+    condition_numbers = isinstance(lst[0][0], int)
+
+    if not ( condition_list and condition_element):
+        raise TypeError('Wrong arguments')
+
+    adj_lst = get_weightgraph_listadjacency(lst, numbers=condition_numbers)
+
+    inf = 1.8446744e+19
+    n = len(adj_lst)
+    m = len(lst)
+    island = []
+    used = [0 for i in range(n)] if condition_numbers else {obj: 0 for obj in adj_lst.keys()}
+
+
+    return island
+
+
 # data structures
 class CycleFound(Exception):
 

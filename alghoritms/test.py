@@ -1,10 +1,25 @@
 from alghoritms import *
 
-lst_of_edges1 = [('m', 'a'), ('a', 'b'), ('b', 'c'), ('b', 'd'), ('c', 'e'), ('d', 'e'), ('e', 'b'), ('x', 'y'), ('y', 'x')]
-lst_of_edges2 = [(0, 1), (1, 0), (1, 2), (1, 3), (1, 4), (2, 1), (2, 4), (3, 1), (3, 4), (4, 1), (4, 2), (4, 3), (4, 5), (5, 4), (5, 6), (6, 5), (7, 8), (8, 7)]
-a = get_graph_listadjacency(lst_of_edges1, numbers=False)
-b = get_graph_listadjacency(lst_of_edges2)
-print(have_cycle(a))
+lst_of_weightedges = [
+    ('a', 'b', 1), ('a', 'x', 3), ('a', 'y', 4), ('b', 'a', 1), ('b', 'c', 1), ('b', 'd', 2),
+    ('b', 'e', 8), ('c', 'b', 1), ('c', 'e', 20), ('d', 'b', 2), ('d', 'e', 5), ('e', 'b', 8),
+    ('e', 'c', 20), ('e', 'd', 5), ('x', 'a', 3), ('x', 'y', 0), ('y', 'a', 4), ('y', 'x', 0)
+]
+# print(prims_algorithm_naive(lst_of_weightedges))
+lst = get_weightgraph_listadjacency(lst_of_weightedges, numbers=False)
+print(prims_algorithm_optimized_square(lst))
+
+
+
+
+
+
+
+# lst_of_edges1 = [('m', 'a'), ('a', 'b'), ('b', 'c'), ('b', 'd'), ('c', 'e'), ('d', 'e'), ('e', 'b'), ('x', 'y'), ('y', 'x')]
+# lst_of_edges2 = [(0, 1), (1, 0), (1, 2), (1, 3), (1, 4), (2, 1), (2, 4), (3, 1), (3, 4), (4, 1), (4, 2), (4, 3), (4, 5), (5, 4), (5, 6), (6, 5), (7, 8), (8, 7)]
+# a = get_graph_listadjacency(lst_of_edges1, numbers=False)
+# b = get_graph_listadjacency(lst_of_edges2)
+# print(have_cycle(a))
 # print(topological_sort(a))
 # print(topological_sort(b))
 # lst_of_weightedges1 = [('a', 'b', 1), ('b', 'a', 2), ('b', 'c', 1), ('b', 'd', 2), ('c', 'e', 20), ('d', 'e', 5), ('e', 'b', 8), ('x', 'y', 0), ('y', 'x', 0)]
