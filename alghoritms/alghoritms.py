@@ -1,5 +1,6 @@
 import time
-from typing import Any
+from sys import exit
+from typing import Any, Iterable
 from random import randint
 from queue import Queue, PriorityQueue
 #This library provides you with implementations of fundamental algorithms and data structures
@@ -958,20 +959,269 @@ def graph_dodfs(lst:list | dict, weight:bool = False) -> list | dict:
     Returns:
         list | dict: list/dict of colors - the result of walking
     """
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not ( condition_list or condition_dict):
+        raise TypeError('Wrong arguments')
 
     color = get_empty_color(lst)
+    array = range(len(lst)) if condition_list else lst.keys()
 
-    if isinstance(lst, list):
-        for u in range(len(lst)):
-            graph_dfs(lst, color, u, weight)
-        return color
+    for u in array:
+        graph_dfs(lst, color, u, weight)
 
-    if isinstance(lst, dict):
-        for u in lst.keys():
-            graph_dfs(lst, color, u, weight)
-        return color
+    return color
 
-    raise TypeError("Wrong arguments")
+
+def get_all_connected_components(lst: list| dict, weight:bool = False) -> tuple:
+    """
+        This algorithm find all connected components in your weighted/unweighted graph.
+        This algorithm returns a tuple of this form: (component, count)
+        where component: list | dict such that component[v] = number connected component.
+              count - count connected components in your graph
+        This algorithm based on dfs
+
+    Complexity: O(n + m)
+                where n - count of vertexes in graph
+                      m - count of edges in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+        weight (bool, optional): set True if you have weighted graph. Defaults to False.
+
+    Raises:
+        TypeError: Wrong arguments
+
+    Returns:
+        tuple: (component, count)
+    """
+
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not ( condition_list or condition_dict):
+        raise TypeError('Wrong arguments')
+
+    def advanced_dfs(v:Any, num:int, lst: list | dict, component:list | dict, weight:bool = False):
+        component[v] = num
+        if weight:
+            for (u, w) in lst[v]:
+                if component[u] == 0:
+                    advanced_dfs(u, num, lst, component, weight)
+        else:
+            for u in lst[v]:
+                if component[u] == 0:
+                    advanced_dfs(u, num, lst, component, weight)
+
+
+    array = range(len(lst)) if condition_list else lst.keys()
+    component = [0 for i in range(len(lst))] if condition_list else {obj: 0 for obj in lst.keys()}
+
+    num = 0
+
+    for v in array:
+        if component[v] == 0:
+            num += 1
+            advanced_dfs(v, num, lst, component, weight)
+
+    return (component, num)
+
+
+def is_bipartite(lst: list|dict, weight:bool = False) -> tuple | bool:
+    """
+        This is algorithm for determine bipartite of graph.
+        If your graph is bipartite then you get tuple of this form: (True, color)
+        True - bool that tell you graph is bipartite
+        color - list | dict - this is coloring book for each vertex in your graph
+        This algorithm based on dfs
+
+    Complexity: O(n + m)
+                where n - count of vertexes in graph
+                      m - count of edges in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+        weight (bool, optional): Set True if your graph are weighted. Defaults to False.
+
+    Raises:
+        TypeError: Wrong arguments
+
+    Returns:
+        tuple | bool: (True, color) | False
+    """
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not ( condition_list or condition_dict):
+        raise TypeError('Wrong arguments')
+
+    def advanced_dfs(v:Any, col:int, lst: list | dict, color:list | dict, weight:bool = False):
+        color[v] = col
+        if weight:
+            for (u, w) in lst[v]:
+                if color[u] == 0:
+                    result = advanced_dfs(u, -col, lst, color, weight)
+                    if isinstance(result, bool):
+                        return False
+                elif color[u] != - col:
+                    return False
+        else:
+            for u in lst[v]:
+                if color[u] == 0:
+                    result = advanced_dfs(u, -col, lst, color, weight)
+                    if isinstance(result, bool):
+                        return False
+                elif color[u] != - col:
+                    return False
+
+    array = range(len(lst)) if condition_list else lst.keys()
+    color = [0 for i in range(len(lst))] if condition_list else {obj: 0 for obj in lst.keys()}
+
+    for v in array:
+        if color[v] == 0:
+            result = advanced_dfs(v, 1, lst, color, weight)
+            if isinstance(result, bool):
+                return False
+
+    return (True, color)
+
+
+def have_cycle(lst: list|dict, weight:bool = False) -> tuple:
+    """
+        This algorithm find one cycle in graph.
+        Use this algorithm if you need to determine a tree
+        This algorithm based of dfs
+
+    Complexity: O(n + m)
+                where n - count of vertexes in graph
+                      m - count of edges in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+        weight (bool, optional): Set True if your graph are weighted. Defaults to False.
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        tuple: (bool, cycle)
+    """
+
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not ( condition_list or condition_dict):
+        raise TypeError('Wrong arguments')
+
+    def alternative_dfs(v:Any,used:list | dict, lst: list | dict, p:Any = -1, weight:bool=False, flg:lst=[]) -> list:
+        if used[v]:
+            s = 'cycle: '
+            s += str(v)
+            return [True, s, v]
+
+        used[v] = 1
+
+        if weight:
+            for (u, w) in lst[v]:
+                try:
+                    if u != p:
+                        k = alternative_dfs(u, used, lst, p=v, weight=weight, flg=flg)
+                        if len(flg) == 0 and k[2] != -1:
+                            k[1] += ' <- ' + str(v)
+                            if k[2] == v:
+                                # exit(0)
+                                flg.append(1)
+                                raise CycleFound
+                            return k
+                        else:
+                            return k
+                except CycleFound:
+                    return k
+        else:
+            for u in lst[v]:
+                try:
+                    if u != p:
+                        k = alternative_dfs(u,used, lst, p=v ,weight=weight, flg=flg)
+                        if len(flg) == 0 and k[2] != -1:
+                            k[1] += ' <- ' + str(v)
+                            if k[2] == v:
+                                # exit(0)
+                                flg.append(1)
+                                raise CycleFound
+                            return k
+                        else:
+                            return k
+                except CycleFound:
+                    return k
+
+        return [False, '', -1]
+
+
+    array = range(len(lst)) if condition_list else lst.keys()
+    used = [0 for i in range(len(lst))] if condition_list else {obj: 0 for obj in lst.keys()}
+
+    for v in array:
+        if used[v] == 0:
+            k = alternative_dfs(v, used, lst, weight=weight)
+            if k[0]:
+                return (k[0], k[1])
+    return (False, '')
+
+
+def topological_sort(lst: list | dict, weight:bool = False) -> list:
+    """
+        This is algorithm of topological sorting of graph
+        Whis algorithm works for acyclic graph
+        Algorithm returns list t - topological order of vertexes in graph.
+        topological orders means:
+        Let t[i] = u, t[j] = v.
+        for each i,j: i < j we have no path from v to u
+
+        This algorithm baased on dfs
+
+    Complexity: O(n + m)
+                where n - count of vertexes in graph
+                      m - count of edges in graph
+
+    Args:
+        lst (list | dict): list/dict of adjacency
+        weight (bool, optional): Set True if your graph are weighted. Defaults to False.
+
+    Raises:
+        TypeError: Wrong arguments
+
+    Returns:
+        list: topological order
+    """
+    condition_list = isinstance(lst, list)
+    condition_dict = isinstance(lst, dict)
+
+    if not ( condition_list or condition_dict):
+        raise TypeError('Wrong arguments')
+
+    def dfs(v:Any, lst: list | dict, used: list | dict, t:list):
+        used[v] = 1
+        if weight:
+            for (u, w) in lst[v]:
+                if used[u] == 0:
+                    dfs(u, lst, used, t)
+            t.append(v)
+        else:
+            for u in lst[v]:
+                if used[u] == 0:
+                    dfs(u, lst, used, t)
+            t.append(v)
+
+    array = range(len(lst)) if condition_list else lst.keys()
+    used = [0 for i in range(len(lst))] if condition_list else {obj: 0 for obj in lst.keys()}
+    t = []
+
+    for v in array:
+        if used[v] == 0:
+            dfs(v, lst, used, t)
+    t.reverse()
+    return t
 
 
 def graph_bfs(lst:list | dict, s:Any, weight:bool = False) -> tuple:
@@ -1081,14 +1331,17 @@ def dejcstra(lst:list | dict, s:Any, max_weight:Any = None) -> list | dict:
     max_weight = max_weight if not ( max_weight is None ) else 1.8446744e+19
     n = len(lst)
 
-    if condition_list:
-        a = [False for i in range(n)]
-        d = [max_weight for i in range(n)]
-    else:
-        a, d = {}, {}
-        for i in lst.keys():
-            a[i] = 0
-            d[i] = max_weight
+    a = [False for i in range(n)] if condition_list else {obj: 0 for obj in lst.keys()}
+    d = [max_weight for i in range(n)] if condition_list else {obj: max_weight for obj in lst.keys()}
+
+    # if condition_list:
+    #     a = [False for i in range(n)]
+    #     d = [max_weight for i in range(n)]
+    # else:
+    #     a, d = {}, {}
+    #     for i in lst.keys():
+    #         a[i] = 0
+    #         d[i] = max_weight
 
     d[s] = 0
 
@@ -1166,6 +1419,12 @@ def dejcstra_heap(lst:list | dict, s:Any, max_weight:Any = None) -> list | dict:
 
 
 # data structures
+class CycleFound(Exception):
+
+    def __init__(self):
+        super().__init__()
+
+
 class Heap:
     """
         This is a heap.
@@ -1354,6 +1613,10 @@ class Hash_table:
         return string
 
     __repr__ = __str__
+
+
+class RedBlackTree:
+    pass
 
 
 class Poly:

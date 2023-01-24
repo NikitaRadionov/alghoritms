@@ -1,5 +1,105 @@
 from alghoritms import *
-from queue import PriorityQueue
+
+lst_of_edges1 = [('m', 'a'), ('a', 'b'), ('b', 'c'), ('b', 'd'), ('c', 'e'), ('d', 'e'), ('e', 'b'), ('x', 'y'), ('y', 'x')]
+lst_of_edges2 = [(0, 1), (1, 0), (1, 2), (1, 3), (1, 4), (2, 1), (2, 4), (3, 1), (3, 4), (4, 1), (4, 2), (4, 3), (4, 5), (5, 4), (5, 6), (6, 5), (7, 8), (8, 7)]
+a = get_graph_listadjacency(lst_of_edges1, numbers=False)
+b = get_graph_listadjacency(lst_of_edges2)
+print(have_cycle(a))
+# print(topological_sort(a))
+# print(topological_sort(b))
+# lst_of_weightedges1 = [('a', 'b', 1), ('b', 'a', 2), ('b', 'c', 1), ('b', 'd', 2), ('c', 'e', 20), ('d', 'e', 5), ('e', 'b', 8), ('x', 'y', 0), ('y', 'x', 0)]
+# lst_of_weightedges2 = [
+#     (0, 1, 1), (1, 0, 1), (1, 2, 1), (1, 3, 1),
+#     (1, 4, 1), (2, 1, 1), (2, 4, 1), (3, 1, 1),
+#     (3, 4, 1), (4, 1, 1), (4, 2, 1), (4, 3, 1),
+#     (4, 5, 1), (5, 4, 1), (5, 6, 1), (6, 5, 1)
+#     ]
+
+# a = []
+# a.append(get_graph_listadjacency(lst_of_edges1, numbers=False))
+# a.append(get_graph_listadjacency(lst_of_edges2))
+# a.append(get_weightgraph_listadjacency(lst_of_weightedges1, numbers=False))
+# a.append(get_weightgraph_listadjacency(lst_of_weightedges2))
+
+# for i in range(4):
+#     if i > 1:
+#         print(is_bipartite(a[i], weight=True))
+#     else:
+#         print(is_bipartite(a[i]))
+
+
+# lst_of_weightedges2 = [
+#     (0, 1, 1), (1, 0, 1), (1, 2, 1), (1, 3, 1),
+#     (1, 4, 1), (2, 1, 1), (2, 4, 1), (3, 1, 1),
+#     (3, 4, 1), (4, 1, 1), (4, 2, 1), (4, 3, 1),
+#     (4, 5, 1), (5, 4, 1), (5, 6, 1), (6, 5, 1)
+# ]
+
+
+
+# lst_of_edges = [
+#     (0, 1), (1, 0), (1, 2),
+#     (1, 5), (2, 1), (2, 3),
+#     (2, 4), (3, 2), (3, 5),
+#     (4, 2), (4, 5), (5, 1),
+#     (5, 3), (5, 4)
+# ]
+
+
+# a = get_graph_listadjacency(lst_of_edges)
+# print(is_bipartite(a))
+
+
+# class SomeException(Exception):
+
+#     def __init__(self):
+#         # self.messages = string
+#         super().__init__()
+
+# def Somefunction(a:int, s:str):
+#     if a < 7:
+#         a += 1
+#         s += str(a) + "+"
+#         try:
+#             s = Somefunction(a, s)
+#             return s
+#         except SomeException:
+#             return s
+#     else:
+#         raise SomeException
+
+# print(Somefunction(1, ''))
+
+
+# lst_of_edges = [
+#     (0, 1), (1, 2), (1, 3), (2, 0), (3, 1)
+# ]
+# lst_of_edges = [
+#     (1, 2), (1, 3),
+#     (2, 1), (2, 3),
+#     (3, 1), (3, 2)
+# ]
+# lst_of_edges = [
+#     ('a', 'b'), ('a', 'c'),
+#     ('b', 'a'), ('b', 'c'),
+#     ('c', 'a'), ('c', 'b')
+# ]
+# a = get_graph_listadjacency(lst_of_edges, numbers=False)
+# print(a)
+# print(have_cycle(a))
+
+
+
+
+
+
+
+
+
+
+
+
+# from queue import PriorityQueue
 # q = PriorityQueue()
 
 # q.put((1, 2))
@@ -15,19 +115,17 @@ from queue import PriorityQueue
 # print(q.get())
 
 
-
-
-lst_of_weightedges1 = [
-    (0, 1, 1), (1, 0, 1), (1, 2, 1), (1, 3, 1),
-    (1, 4, 1), (2, 1, 1), (2, 4, 1), (3, 1, 1),
-    (3, 4, 1), (4, 1, 1), (4, 2, 1), (4, 3, 1),
-    (4, 5, 1), (5, 4, 1), (5, 6, 1), (6, 5, 1)
-    ]
-lst_of_weightedges2 = [('a', 'b', 1), ('b', 'a', 2), ('b', 'c', 1), ('b', 'd', 2), ('c', 'e', 20), ('d', 'e', 5), ('e', 'b', 8), ('x', 'y', 0), ('y', 'x', 0)]
-adj1 = get_weightgraph_listadjacency(lst_of_weightedges1)
-adj2 = get_weightgraph_listadjacency(lst_of_weightedges2 ,numbers=False)
-print(dejcstra_heap(adj1, 1))
-print(dejcstra_heap(adj2, 'c'))
+# lst_of_weightedges1 = [
+#     (0, 1, 1), (1, 0, 1), (1, 2, 1), (1, 3, 1),
+#     (1, 4, 1), (2, 1, 1), (2, 4, 1), (3, 1, 1),
+#     (3, 4, 1), (4, 1, 1), (4, 2, 1), (4, 3, 1),
+#     (4, 5, 1), (5, 4, 1), (5, 6, 1), (6, 5, 1)
+#     ]
+# lst_of_weightedges2 = [('a', 'b', 1), ('b', 'a', 2), ('b', 'c', 1), ('b', 'd', 2), ('c', 'e', 20), ('d', 'e', 5), ('e', 'b', 8), ('x', 'y', 0), ('y', 'x', 0)]
+# adj1 = get_weightgraph_listadjacency(lst_of_weightedges1)
+# adj2 = get_weightgraph_listadjacency(lst_of_weightedges2 ,numbers=False)
+# print(dejcstra_heap(adj1, 1))
+# print(dejcstra_heap(adj2, 'c'))
 
 # lst_of_edges = [(0, 1), (1, 0), (1, 2), (1, 3), (1, 4), (2, 1), (2, 4), (3, 1), (3, 4), (4, 1), (4, 2), (4, 3), (4, 5), (5, 4), (5, 6), (6, 5)]
 # adj = get_weightgraph_listadjacency(lst_of_weightedges, numbers=False)
