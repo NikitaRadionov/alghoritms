@@ -1,17 +1,60 @@
 from alghoritms import *
+from queue import PriorityQueue
+# q = PriorityQueue()
 
-lst_of_weightedges = [
-    ('a', 'b', 1), ('a', 'x', 3), ('a', 'y', 4), ('b', 'a', 1), ('b', 'c', 1), ('b', 'd', 2),
-    ('b', 'e', 8), ('c', 'b', 1), ('c', 'e', 20), ('d', 'b', 2), ('d', 'e', 5), ('e', 'b', 8),
-    ('e', 'c', 20), ('e', 'd', 5), ('x', 'a', 3), ('x', 'y', 0), ('y', 'a', 4), ('y', 'x', 0)
-]
+# m = {1}
+# print(type(m))
+
+# lst_of_weightedges = [
+#     ('a', 'b', 1), ('a', 'x', 3), ('a', 'y', 4), ('b', 'a', 1), ('b', 'c', 1), ('b', 'd', 2),
+#     ('b', 'e', 8), ('c', 'b', 1), ('c', 'e', 20), ('d', 'b', 2), ('d', 'e', 5), ('e', 'b', 8),
+#     ('e', 'c', 20), ('e', 'd', 5), ('x', 'a', 3), ('x', 'y', 0), ('y', 'a', 4), ('y', 'x', 0)
+# ]
+# a = get_weightgraph_listadjacency(lst_of_weightedges, numbers=False)
 # print(prims_algorithm_naive(lst_of_weightedges))
-lst = get_weightgraph_listadjacency(lst_of_weightedges, numbers=False)
-print(prims_algorithm_optimized_square(lst))
+# print(prims_algorithm_optimized_square(a))
+# print(prims_algorithm_optimized_log(a))
+
+# U = {1}
+# print(len(U))
+
+
+
+# print(q.__doc__)
+# q = PriorityQueue()
+# edge = ('a', 'y', 4)
+# w = edge[2]
+# q.put((w, edge))
+# edge = ('a', 'b', 1)
+# w = edge[2]
+# # print(q.queue)
+# q.put((w, edge))
+# print(q.queue, (w, edge))
+# print((w, edge) in q.queue)
+# print(q.get())
+# print(q.get())
+
+
+
+# q.put((1, 3))
+# q.put((2, 4))
+# q.put((0, 88, 3))
+# print(bool(q.qsize()))
+# print(q.get())
+# print(q.get())
 
 
 
 
+
+# lst_of_weightedges = [
+#     ('a', 'b', 1), ('a', 'x', 3), ('a', 'y', 4), ('b', 'a', 1), ('b', 'c', 1), ('b', 'd', 2),
+#     ('b', 'e', 8), ('c', 'b', 1), ('c', 'e', 20), ('d', 'b', 2), ('d', 'e', 5), ('e', 'b', 8),
+#     ('e', 'c', 20), ('e', 'd', 5), ('x', 'a', 3), ('x', 'y', 0), ('y', 'a', 4), ('y', 'x', 0)
+# ]
+# print(prims_algorithm_naive(lst_of_weightedges))
+# lst = get_weightgraph_listadjacency(lst_of_weightedges, numbers=False)
+# print(prims_algorithm_optimized_square(lst))
 
 
 
