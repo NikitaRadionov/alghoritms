@@ -1,7 +1,21 @@
 from alghoritms import *
-from queue import PriorityQueue
-# q = PriorityQueue()
+from queue import Queue
+# s = Dsu()
+# print(s.storage)
+# print('')
+# print(s.find_set(0))
+# count = 0
+# for i in s.storage.values():
+#     if i == 3:
+#         count += 1
+# print('')
+# print(count)
+# print('')
+# print(s.storage)
+# from queue import PriorityQueue
 
+# q = PriorityQueue()
+        # {0: 1, 1: 4, 2: 3, 3: 3, 4: 3, 5: 0}
 # m = {1}
 # print(type(m))
 
@@ -10,6 +24,37 @@ from queue import PriorityQueue
 #     ('b', 'e', 8), ('c', 'b', 1), ('c', 'e', 20), ('d', 'b', 2), ('d', 'e', 5), ('e', 'b', 8),
 #     ('e', 'c', 20), ('e', 'd', 5), ('x', 'a', 3), ('x', 'y', 0), ('y', 'a', 4), ('y', 'x', 0)
 # ]
+# print(sorted(lst_of_weightedges, key=lambda x: x[2]))
+
+# s = Dsu()
+# a = 1
+# if not s.have_element(a):
+#     s.make_set(a)
+# print(not s.have_element(a))
+
+# lst_of_weightedges = [
+#     ('a', 'b', 1), ('a', 'x', 3), ('b', 'c', 1), ('b', 'd', 2),
+#     ('c', 'b', 1), ('c', 'e', 20), ('d', 'b', 2), ('d', 'e', 5), ('e', 'b', 8),
+#     ('e', 'c', 20), ('e', 'd', 5), ('x', 'a', 3), ('x', 'y', 0), ('y', 'a', 4), ('y', 'x', 0)
+# ]
+# print(prims_algorithm_naive(lst_of_weightedges))
+# a = get_weightgraph_listadjacency(lst_of_weightedges, numbers=False)
+# print(prims_algorithm_optimized_log(a))
+# print(kruskals_algorithm(lst_of_weightedges))
+# edges = [(a, b) for (a, b, w) in lst_of_weightedges]
+# a = get_graph_listadjacency(edges, numbers=False)
+# print(graph_bfs(a, 'b')[1])
+# print(type(1.8446744e+19))
+
+# (a, b, 1) +
+# (b, c, 1) +
+# (b, d, 2) +
+# (a, x, 3) +
+# (x, y, 0) +
+# (d, e, 5) +
+
+
+
 # a = get_weightgraph_listadjacency(lst_of_weightedges, numbers=False)
 # print(prims_algorithm_naive(lst_of_weightedges))
 # print(prims_algorithm_optimized_square(a))
@@ -145,16 +190,6 @@ from queue import PriorityQueue
 # a = get_graph_listadjacency(lst_of_edges, numbers=False)
 # print(a)
 # print(have_cycle(a))
-
-
-
-
-
-
-
-
-
-
 
 
 # from queue import PriorityQueue

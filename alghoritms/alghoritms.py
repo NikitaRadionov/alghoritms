@@ -1593,11 +1593,113 @@ def prims_algorithm_optimized_log(lst: list | dict) -> list:
     return island
 
 
+def kruskals_algorithm(lst:list) -> list:
+    """
+        This is Kruskal's algorithm for findind minimal island.
+        Minimal island is such spanning tree of graph that sum of edge weights is minimal
+        Input: Connected weighted undirected graph (list of edges)
+        Output: Minimal island (list of edges)
+
+        This implementation uses disjoin set union
+
+    Complexity: O(mlog(m))
+                where m - count of edges in graph
+
+    Args:
+        lst (list): list of edges of your graph
+
+    Returns:
+        list: list of edges of minimal island
+    """
+
+    sorted_lst = sorted(lst, key=lambda x: x[2])
+    island = []
+    s = Dsu()
+
+    # initialization disjoin set union
+    for edge in lst:
+        a = edge[0]
+        b = edge[1]
+        if not s.have_element(a):
+            s.make_set(a)
+        if not s.have_element(b):
+            s.make_set(b)
+
+    # algorithm
+    for edge in sorted_lst:
+        a = edge[0]
+        b = edge[1]
+        w = edge[2]
+        if s.find_set(a) != s.find_set(b):
+            island.append((a, b, w))
+            island.append((b, a, w))
+            s.union_sets(a, b)
+
+    return island
+
+
 # data structures
 class CycleFound(Exception):
 
     def __init__(self):
         super().__init__()
+
+
+class Dsu:
+    """
+        This is Disjoin Set Union.
+        This implementation uses the heuristic of path compression and pooling by rank
+
+        Complexity of each operation: O(a(n)) a(n) - inverse Ackermann function
+        For simplicity, we can assume that we have constant complexity
+    """
+
+    def __init__(self):
+        self.__storage = {}
+        self.__rank = {}
+
+
+    def make_set(self, x:Any):
+        self.__storage[x] = x
+        self.__rank[x] = 0
+
+
+    def find_set(self, x:Any):
+        if x == self.__storage[x]:
+            return x
+        p = self.find_set(self.__storage[x])
+        self.__storage[x] = p
+        return p
+
+
+    def have_element(self, x:Any):
+        try:
+            return self.find_set(x)
+        except KeyError:
+            return False
+
+
+    def union_sets(self, a:Any, b:Any):
+        a = self.find_set(a)
+        b = self.find_set(b)
+        if a != b:
+            if self.__rank[a] < self.__rank[b]:
+                c = a
+                a = b
+                b = c
+            self.__storage[b] = a
+            if self.__rank[a] == self.__rank[b]:
+                self.__rank[a] += 1
+
+
+    def get_storage(self):
+        x = self.__storage.copy()
+        return x
+
+
+    def get_rank(self):
+        x = self.__rank.copy()
+        return x
 
 
 class Heap:
