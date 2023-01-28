@@ -1639,12 +1639,6 @@ def kruskals_algorithm(lst:list) -> list:
 
 
 # data structures
-class CycleFound(Exception):
-
-    def __init__(self):
-        super().__init__()
-
-
 class Dsu:
     """
         This is Disjoin Set Union.
@@ -1769,7 +1763,7 @@ class Heap:
         return heap
 
 
-class Hash_table:
+class HashTable:
     """
         This is hash_table with open addressing
         Collisions are solved by double hashing
@@ -1888,6 +1882,150 @@ class Hash_table:
                 c += 1
         string += "}"
         return string
+
+    __repr__ = __str__
+
+
+class BinNode:
+    """
+        This is node of binary tree
+        Use it for class BinTree.
+    """
+
+    def __init__(self, key:Any=None, p=None, left=None, right=None):
+        self.key = key
+        self.p = p
+        self.left = left
+        self.right = right
+
+
+    def __str__(self):
+        return str((self.key, self.left if self.left is None else self.left.key, self.right if self.right is None else self.right.key))
+
+
+    __repr__ = __str__
+
+
+class BinTree:
+    """
+        This is implementation of binary tree.
+
+        Complexity:
+                    insert: O(n)
+                    delete: O(n)
+                    search: O(log(n))
+    """
+
+    def __init__(self):
+        self.storage = []
+        self.keys = []
+        self.root = None
+
+
+    def __transplant(self, u, v):
+
+        if u.p is None:
+            self.root = v
+        elif u == u.p.left:
+            u.p.left = v
+        else:
+            u.p.right = v
+        if not (v is None):
+            v.p = u.p
+
+        return None
+
+
+    def __get_min(self, v=None):
+
+        v = self.root if v is None else v
+
+        while (not (v.left is None)):
+            v = v.left
+
+        return v
+
+
+    def __get_max(self, v=None):
+
+        v = self.root if v is None else v
+
+        while (not (v.right is None)):
+            v = v.right
+
+        return v
+
+
+    def __searching(self, key, v=None):
+
+        if v is None or key == v.key:
+            return v
+        if key < v.key:
+            return self.__searching(key, v=v.left)
+        else:
+            return self.__searching(key, v=v.right)
+
+
+    def get_minimum(self, v=None):
+        return self.__get_min(v=v).key
+
+
+    def get_maximum(self, v=None):
+        return self.__get_max(v=v).key
+
+
+    def insert(self, z):
+
+        if not (z.key in self.keys):
+            self.storage.append(z)
+            self.keys.append(z.key)
+
+            y = None
+            x = self.root
+            while (not (x is None)):
+                y = x
+                x = x.left if  z.key < x.key else x.right
+
+            z.p = y
+
+            if y is None:
+                self.root = z
+            elif z.key < y.key:
+                y.left = z
+            else:
+                y.right = z
+
+
+    def delete(self, z):
+
+        if z.left is None:
+            self.__transplant(z, z.right)
+        elif z.right is None:
+            self.__transplant(z, z.left)
+        else:
+            y = self.get_minimum(z.right)
+            if y.p != z:
+                self.__transplant(y, y.right)
+                y.right = z.right
+                y.right.p = y
+            self.__transplant(z, y)
+            y.left = z.left
+            y.left.p = y
+
+        self.storage.remove(z)
+        self.keys.remove(z.key)
+
+
+    def search(self, key, v=None):
+        v = self.root if v is None else v
+        result = self.__searching(key, v=v)
+        return not (result is None)
+
+
+    def __str__(self):
+        str_root = f"root - {self.root if self.root is None else self.root.key}"
+        str_storage = f"storage - {self.storage}"
+        return str_root + "\n" + str_storage
 
     __repr__ = __str__
 
@@ -2121,6 +2259,11 @@ class QuadraticPolynomial(Poly):
             if D < 0:
                 return []
 
+
+class CycleFound(Exception):
+
+    def __init__(self):
+        super().__init__()
 
 #sorting
 def heapsort(lst:list, reverse:bool=False) -> list:
