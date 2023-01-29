@@ -147,6 +147,42 @@ def modular_exponentiation(a:int, b:int, n:int) -> int:
     return d
 
 
+def sieve_of_eratosthenes(n:int) -> list:
+    """
+        This is sieve of eratosthenes
+        This algorithm give you list is_prime which len: len(is_prime) = n + 1.
+        If i - prime number then is_prime[i] = True
+
+    Complexity: O(nlog(log(n)))
+
+    Args:
+        n (int): number - end of interval
+
+    Returns:
+        list: list is_prime
+    """
+    is_prime = [True for i in range(n + 1)]
+    is_prime[0] = False
+    is_prime[1] = False
+    for i in range(2, n + 1):
+        if is_prime[i]:
+            for j in range(2*i, n + 1, i):
+                is_prime[j] = False
+    return is_prime
+
+
+# def linear_sieve(n:int) -> list:
+#     d = [0 for i in range(n + 1)]
+#     p = []
+#     for k in range(2, n + 1):
+#         if p[k] == 0:
+#             d[k] = k
+#             p.append(k)
+#         for x in p:
+#             if x > d[k] or x * d[k] > n:
+#                 break
+#             d[k * x] = x
+
 __all__ = [
     'pow',
     'horners_rule',
@@ -154,4 +190,5 @@ __all__ = [
     'euclid_extended',
     'modular_linear_solver',
     'modular_exponentiation',
+    'sieve_of_eratosthenes'
 ]

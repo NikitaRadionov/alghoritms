@@ -2,6 +2,11 @@ from typing import Any
 from random import randint
 from .strings import strHash
 
+# future:
+# AVL Tree
+# Decartes Tree
+# Splay Tree
+
 class Dsu:
     """
         This is Disjoin Set Union.
@@ -285,7 +290,7 @@ class BinTree:
         self.root = None
 
 
-    def __transplant(self, u, v):
+    def __transplant(self, u:BinNode, v:BinNode):
 
         if u.p is None:
             self.root = v
@@ -337,7 +342,7 @@ class BinTree:
         return self.__get_max(v=v).key
 
 
-    def insert(self, z):
+    def insert(self, z:BinNode):
 
         if not (z.key in self.keys):
             self.storage.append(z)
@@ -359,7 +364,7 @@ class BinTree:
                 y.right = z
 
 
-    def delete(self, z):
+    def delete(self, z:BinNode):
 
         if z.left is None:
             self.__transplant(z, z.right)
@@ -393,7 +398,324 @@ class BinTree:
     __repr__ = __str__
 
 
+class RedBlackNode:
+    """
+        a.color = 0 # a.color == BLACK
+        a.color = 1 # a.color == RED
+    """
+
+    def __init__(self, color=0, key=None, p=None, left=None, right=None):
+        self.color = color
+        self.key = key
+        self.p = p
+        self.left = left
+        self.right = right
+
+
+    def __str__(self):
+        if not (self.left is None or self.right is None):
+            return str((self.color, self.key, self.left.key, self.right.key))
+        else:
+            return str((self.color, self.key, self.p, self.left, self.right))
+
+
+    __repr__ = __str__
+
+
 class RedBlackTree:
+    """
+        This is implementation of red-black tree.
+
+        Complexity:
+                    insert: O(log(n))
+                    delete: O(log(n))
+                    search: O(log(n))
+    """
+
+    def __init__(self):
+        self.root = RedBlackNode()
+        self.nill = RedBlackNode()
+        self.count = 0
+
+
+    def __is_nill(self, x:RedBlackNode):
+        return ((x.color == 0) and (x.key is None))
+
+
+    def __left_rotate(self, x:RedBlackNode):
+        y = x.right
+        x.right = y.left
+
+        if not self.__is_nill(y.left):
+            y.left.p = x
+
+        y.p = x.p
+
+        if self.__is_nill(x.p):
+            self.root = y
+        elif x == x.p.left:
+            x.p.left = y
+        else:
+            x.p.right = y
+
+        y.left = x
+        x.p = y
+
+
+    def __right_rotate(self, y:RedBlackNode):
+        x = y.left
+        y.left = x.right
+
+        if not self.__is_nill(x.right):
+            x.right.p = y
+
+        x.p = y.p
+
+        if self.__is_nill(y.p):
+            self.root = x
+        elif y == y.p.left:
+            y.p.left = x
+        else:
+            y.p.right = x
+
+        x.right = y
+        y.p = x
+
+
+    def __transplant(self, u:RedBlackNode, v:RedBlackNode):
+
+        if self.__is_nill(u.p):
+            self.root = v
+        elif u == u.p.left:
+            u.p.left = v
+        else:
+            u.p.right = v
+        v.p = u.p
+
+
+    def __get_min(self, v=None):
+
+        v = self.root if v is None else v
+
+        while not self.__is_nill(v.left):
+            v = v.left
+
+        return v
+
+
+    def __get_max(self, v=None):
+
+        v = self.root if v is None else v
+
+        while not self.__is_nill(v.right):
+            v = v.right
+
+        return v
+
+
+    def __searching(self, key:Any, v:RedBlackNode):
+
+        if self.__is_nill(v) or key == v.key:
+            return v
+        if key < v.key:
+            return self.__searching(key, v=v.left)
+        else:
+            return self.__searching(key, v=v.right)
+
+
+    def __find_node(self, key:Any, v=None) -> RedBlackNode:
+        v = self.root if v is None else v
+        result = self.__searching(key, v=v)
+        return result
+
+
+    def __insert_fixup(self, z:RedBlackNode):
+        while z.p.color == 1:
+            if z.p == z.p.p.left:
+                y = z.p.p.right
+                if y.color == 1:
+                    z.p.color = 0
+                    y.color = 0
+                    z.p.p.color = 1
+                    z = z.p.p
+                else:
+                    if z == z.p.right:
+                        z = z.p
+                        self.__left_rotate(z)
+                    z.p.color = 0
+                    z.p.p.color = 1
+                    self.__right_rotate(z.p.p)
+            else:
+                y = z.p.p.left
+                if y.color == 1:
+                    z.p.color = 0
+                    y.color = 0
+                    z.p.p.color = 1
+                    z = z.p.p
+                else:
+                    if z == z.p.left:
+                        z = z.p
+                        self.__right_rotate(z)
+                    z.p.color = 0
+                    z.p.p.color = 1
+                    self.__left_rotate(z.p.p)
+
+        self.root.color = 0
+
+
+    def __delete_fixup(self, x:RedBlackNode):
+        while (x != self.root) and x.color == 0:
+            if x == x.p.left:
+                w = x.p.right
+                if w.color == 1:
+                    w.color = 0
+                    x.p.color = 1
+                    self.__left_rotate(x.p)
+                    w = x.p.right
+                if w.left.color == 0 and w.right.color == 0:
+                    w.color = 1
+                    x = x.p
+                else:
+                    if w.right.color == 0:
+                        w.left.color = 0
+                        w.color = 1
+                        self.__right_rotate(w)
+                        w = x.p.right
+                    w.color = x.p.color
+                    x.p.color = 0
+                    w.right.color = 0
+                    self.__left_rotate(x.p)
+                    x = self.root
+            else:
+                w = x.p.left
+                if w.color == 1:
+                    w.color = 0
+                    x.p.color = 1
+                    self.__right_rotate(x.p)
+                    w = x.p.left
+                if w.right.color == 0 and w.left.color == 0:
+                    w.color = 1
+                    x = x.p
+                else:
+                    if w.left.color == 0:
+                        w.right.color = 0
+                        w.color = 1
+                        self.__left_rotate(w)
+                        w = x.p.left
+                    w.color = x.p.color
+                    x.p.color = 0
+                    w.left.color = 0
+                    self.__right_rotate(x.p)
+                    x = self.root
+        x.color = 0
+
+
+    def __insert_in_tree(self, z:RedBlackNode):
+        y = self.nill
+        x = self.root
+        while not self.__is_nill(x):
+            y = x
+            x = x.left if z.key < x.key else x.right
+
+        z.p = y
+
+        if self.__is_nill(y):
+            self.root = z
+        elif z.key <  y.key:
+            y.left = z
+        else:
+            y.right = z
+
+        z.left = self.nill
+        z.right = self.nill
+        z.color = 1
+        self.__insert_fixup(z)
+        self.count += 1
+
+
+    def __delete_from_tree(self, z:RedBlackNode):
+        y = z
+        y_original_color = y.color
+
+        if self.__is_nill(z.left):
+            x = z.right
+            self.__transplant(z, z.right)
+        elif self.__is_nill(z.right):
+            x = z.left
+            self.__transplant(z, z.left)
+        else:
+            y = self.__get_min(z.right)
+            y_original_color = y.color
+            x = y.right
+            if y.p == z:
+                x.p = y
+            else:
+                self.__transplant(y, y.right)
+                y.right = z.right
+                y.right.p = y
+            self.__transplant(z, y)
+            y.left = z.left
+            y.left.p = y
+            y.color = z.color
+
+        if y_original_color == 0:
+            self.__delete_fixup(x)
+        self.count -= 1
+
+
+    def insert(self, v:Any):
+        if isinstance(v, RedBlackNode):
+            self.__insert_in_tree(v)
+        else:
+            node = RedBlackNode(key=v)
+            self.__insert_in_tree(node)
+
+
+    def delete(self, key:Any):
+        if isinstance(key, RedBlackNode):
+            self.__delete_from_tree(key)
+        else:
+            z = self.__find_node(key)
+            self.__delete_from_tree(z)
+
+
+    def get_minimum(self, v=None) -> Any:
+        v = self.root if v is None else v
+        return self.__get_min(v=v).key
+
+
+    def get_maximum(self, v=None) -> Any:
+        v = self.root if v is None else v
+        return self.__get_max(v=v).key
+
+
+    def search(self, key, v=None) -> bool:
+        result = self.__find_node(key, v=v)
+        return not self.__is_nill(result)
+
+
+    def __str__(self):
+        return str(self.count)
+
+
+class AvlNode:
+
+    def __init__(self, h=None, key=None, p=None, left=None, right=None):
+        self.h = h
+        self.key = key
+        self.p = p
+        self.left = left
+        self.right = right
+
+
+    def __str__(self):
+        return str((self.key, self.left if self.left is None else self.left.key, self.right if self.right is None else self.right.key))
+
+
+    __repr__ = __str__
+
+
+class AvlTree:
     pass
 
 
@@ -635,7 +957,10 @@ __all__ = [
     'HashTable',
     'BinNode',
     'BinTree',
+    'RedBlackNode',
     'RedBlackTree',
+    'AvlNode',
+    'AvlTree',
     'Poly',
     'DegreeIsTooBigException',
     'QuadraticPolynomial',

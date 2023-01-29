@@ -1,3 +1,63 @@
+# a = RedBlackNode(key=8)
+# b = RedBlackNode(key=6)
+# c = RedBlackNode(key=10)
+# d = RedBlackNode(key=18)
+# e = RedBlackNode(key=1)
+# array = [a, b, c, d, e]
+# tree = RedBlackTree()
+# for element in array:
+#     tree.insert(element)
+
+
+# array = [8, 6, 10, 18, 1]
+# tree = RedBlackTree()
+# for element in array:
+#     tree.insert(element)
+
+# for element in array:
+#     print(tree.search(element))
+
+# print(tree.count)
+# print(tree.search(18))
+# print(tree.search(188))
+# tree.delete(18)
+# print()
+# print(tree.count)
+# print(tree.search(18))
+
+
+
+# print(tree.search(1000))
+# print(tree.search(1))
+# print(tree)
+# print(tree.root)
+# print(array)
+
+
+
+
+# tree = BinTree()
+# node = BinNode(key=3)
+# node1 = BinNode(key=4)
+# node2 = BinNode(key=2)
+# node3 = BinNode(key=1)
+# tree.insert(node)
+# tree.insert(node1)
+# tree.insert(node2)
+# tree.insert(node3)
+# print(tree)
+# print()
+# # tree.delete(node)
+# print(tree.search(3))
+# array = sieve_of_eratosthenes(100)
+# count = 0
+# for prime in array:
+#     if prime:
+#         count+=1
+# print(count)
+
+
+
 # class Something:
 
 #     def __init__(self):
