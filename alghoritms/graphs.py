@@ -2,6 +2,19 @@ from typing import Any
 from .data_structures import Dsu, CycleFound
 from queue import Queue, PriorityQueue
 
+# future:
+# Euler cycle
+# Bridges and articulation points
+# Компоненты сильной связности
+# Пути в ациклических графах
+# Корневые деревья
+# Dinic
+# mincost flow
+# Floyd
+# matrixadjacency -> list of edges
+# matrixadjacency -> list of adjacency
+
+
 def get_graph_listadjacency(lst:list, numbers:bool=True) -> list | dict:
     """
         This algorithm for create a list of adjancency by list of edges.

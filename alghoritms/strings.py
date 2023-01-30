@@ -1,5 +1,14 @@
 from .math import horners_rule
 
+# Optional:
+# Поиск подстроки в строке с помощью автоматов
+
+# future:
+# Префиксное дерево
+# Алгоритм Ахо-Корасик
+# Дерево палиндромов
+# Суффиксный массив
+
 def prefix_function_naive(s:str) -> list:
     """
         This is naive algorithm for computing prefix function.

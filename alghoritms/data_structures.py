@@ -2,10 +2,13 @@ from typing import Any
 from random import randint
 from .strings import strHash
 
-# future:
+# Optional:
 # AVL Tree
 # Decartes Tree
 # Splay Tree
+
+# future:
+# корневые деревья
 
 class Dsu:
     """

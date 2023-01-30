@@ -6,7 +6,7 @@
 
 
         This library provides you with implementations of fundamental 
-        algorithms and data structures
+	algorithms and data structures
         For each entity are presented Time and Memory complexity. 
         If there is no inside entity words Time and Memory
         then inside must be word Complexity - it's mean Time complexity
