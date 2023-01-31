@@ -11,11 +11,164 @@ from queue import Queue, PriorityQueue
 # Dinic
 # mincost flow
 # Floyd
-# matrixadjacency -> list of edges
-# matrixadjacency -> list of adjacency
+# list of adjacency -> list of edges
+# list of adjacency -> matrixadjacency
 
 
-def get_graph_listadjacency(lst:list, numbers:bool=True) -> list | dict:
+def listadj_to_listedge(lst:list | dict) -> list:
+    """
+        This algorithm for creating list of edges by list of adjacency for unweight graph.
+
+    Complexity: O(m) where m - count of edges in graph
+
+    Args:
+        lst (list | dict): list of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list: list of edges
+    """
+    if isinstance(lst, (list, dict)):
+        vertexes = range(len(lst)) if isinstance(lst, list) else lst.keys()
+        edges = []
+        for u in vertexes:
+            for v in lst[u]:
+                edges.append((u, v))
+        return edges
+    else:
+        raise TypeError('Wrong Argumnets')
+
+
+def listadj_weight_to_listedge(lst:list | dict) -> list:
+    """
+        This algorithm for creating list of edges by list of adjacency for weight graph.
+
+    Complexity: O(m) where m - count of edges in graph
+
+    Args:
+        lst (list | dict): list of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list: list of edges
+    """
+    if isinstance(lst, (list, dict)):
+        vertexes = range(len(lst)) if isinstance(lst, list) else lst.keys()
+        edges = []
+        for u in vertexes:
+            for v in lst[u]:
+                edges.append((u, v[0], v[1]))
+        return edges
+    else:
+        raise TypeError('Wrong Argumnets')
+
+
+def listadj_to_matrixadj(lst:list | dict) -> list | dict:
+    """
+        This algorithm for creating matrix adjacency by list of adjacency for unweight graph.
+        If edge (a, b) is exist, I suggest, that matrix[a][b] == 1
+        If edge (a, b) does not exist, I suggest, that matrix[b][b] == 0
+
+    Complexity: O(n^2) where n - count of vertexes in graph
+
+    Args:
+        lst (list | dict): list of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list | dict: matrix of adjacency
+    """
+    if isinstance(lst, (list, dict)):
+
+        all_vertexes = list(range(len(lst))) if isinstance(lst, list) else list(lst.keys())
+        vertexes = all_vertexes.copy()
+
+        for u in vertexes:
+            for v in lst[u]:
+                if not (v in all_vertexes):
+                    all_vertexes.append(v)
+
+        if isinstance(lst, list):
+            n = len(all_vertexes)
+            matrix = [[0 for j in range(n + 1)] for i in range(n + 1)]
+
+            for a in all_vertexes:
+                for b in lst[a]:
+                    matrix[a][b] = 1
+
+            return matrix
+        else:
+
+            matrix = {v: {v: 0 for v in all_vertexes} for v in all_vertexes}
+
+            for a in all_vertexes:
+                if a in lst.keys():
+                    for b in lst[a]:
+                        matrix[a][b] = 1
+
+            return matrix
+
+    else:
+        raise TypeError('Wrong Argumnets')
+
+
+def listadj_weight_to_matrixadj(lst:list | dict) -> list | dict:
+    """
+        This algorithm for creating matrix adjacency by list of adjacency for weight graph.
+        If edge (a, b, w) is exist, I suggest, that matrix[a][b] == w
+        If edge (a, b, w) does not exist, I suggest, that matrix[b][b] == -1
+
+    Complexity: O(n^2) where n - count of vertexes in graph
+
+    Args:
+        lst (list | dict): list of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list | dict: matrix of adjacency
+    """
+    if isinstance(lst, (list, dict)):
+
+        all_vertexes = list(range(len(lst))) if isinstance(lst, list) else list(lst.keys())
+        vertexes = all_vertexes.copy()
+
+        for u in vertexes:
+            for v in lst[u]:
+                if not (v[0] in all_vertexes):
+                    all_vertexes.append(v[0])
+
+        if isinstance(lst, list):
+            n = len(all_vertexes)
+            matrix = [[0 for j in range(n + 1)] for i in range(n + 1)]
+
+            for a in all_vertexes:
+                for b in lst[a]:
+                    matrix[a][b[0]] = b[1]
+
+            return matrix
+        else:
+
+            matrix = {v: {v: -1 for v in all_vertexes} for v in all_vertexes}
+
+            for a in all_vertexes:
+                if a in lst.keys():
+                    for b in lst[a]:
+                        matrix[a][b[0]] = b[1]
+
+            return matrix
+    else:
+        raise TypeError('Wrong Argumnets')
+
+
+def listedge_to_listadj(lst:list, numbers:bool=True) -> list | dict:
     """
         This algorithm for create a list of adjancency by list of edges.
         Edges in list of edges a must be a tuples of this form (a, b).
@@ -55,7 +208,7 @@ def get_graph_listadjacency(lst:list, numbers:bool=True) -> list | dict:
         return d
 
 
-def get_graph_matrixadjacency(lst:list, numbers=True) -> list | dict:
+def listedge_to_matrixadj(lst:list, numbers:bool=True) -> list | dict:
     """
         This algorithm for create a matrix of adjancency by list of edges.
         Edges in list of edges a must be a tuples of this form (a, b).
@@ -87,13 +240,19 @@ def get_graph_matrixadjacency(lst:list, numbers=True) -> list | dict:
             matrix[a][b] = 1
         return matrix
     else:
-        d = {a: {a: 0 for (a, b) in lst} for (a, b) in lst}
+        vertexes = []
+        for edge in lst:
+            for i in range(2):
+                if not (edge[i] in vertexes):
+                    vertexes.append(edge[i])
+
+        d = {v: {v: 0 for v in vertexes} for v in vertexes}
         for (a, b) in lst:
             d[a][b] = 1
         return d
 
 
-def get_weightgraph_listadjacency(lst:list, numbers:bool=True) -> list | dict:
+def listedge_weight_to_listadj(lst:list, numbers:bool=True) -> list | dict:
     """
         This algorithm for create a list of adjancency by list of edges.
         Edges in list of edges a must be a tuples of this form (a, b, w).
@@ -133,7 +292,7 @@ def get_weightgraph_listadjacency(lst:list, numbers:bool=True) -> list | dict:
         return d
 
 
-def get_weightgraph_matrixadjacency(lst:list, numbers=True) -> list | dict:
+def listedge_weight_to_matrixadj(lst:list, numbers:bool=True) -> list | dict:
     """
         This algorithm for create a matrix of adjancency by list of edges.
         Edges in list of edges a must be a tuples of this form (a, b, w).
@@ -165,10 +324,135 @@ def get_weightgraph_matrixadjacency(lst:list, numbers=True) -> list | dict:
             matrix[a][b] = w
         return matrix
     else:
-        d = {a: {a: -1 for (a, b) in lst} for (a, b) in lst}
+
+        vertexes = []
+        for edge in lst:
+            for i in range(2):
+                if not (edge[i] in vertexes):
+                    vertexes.append(edge[i])
+
+        d = {v: {v: -1 for v in vertexes} for v in vertexes}
         for (a, b, w) in lst:
             d[a][b] = w
         return d
+
+
+def matrixadj_to_listedge(matrix:list | dict) -> list:
+    """
+        This is algorithm for creating list of edges by matrix adjacency for unweight graph.
+        If edge (a, b) does not exist, then I suggest that matrix[a][b] == 0
+        If edge (a, b) is exist, then I suggest that matrix[a][b] == 1
+        a, b may be any unmutable objects
+
+    Complexity: O(n^2) where n - count of vertexes in graph
+
+    Args:
+        matrix (list | dict): matrix of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list: list of edges
+    """
+    if isinstance(matrix, (list, dict)):
+        vertexes = range(len(matrix)) if isinstance(matrix, list) else matrix.keys()
+        lst = []
+        for a in vertexes:
+            for b in vertexes:
+                if matrix[a][b] == 1:
+                    lst.append((a, b))
+        return lst
+    else:
+        raise TypeError('Wrong arguments')
+
+
+def matrixadj_weight_to_listedge(matrix:list | dict) -> list:
+    """
+        This is algorithm for creating list of edges by matrix adjacency for weight graph.
+        If edge (a, b, w) does not exist, then I suggest that matrix[a][b] == -1
+        If edge (a, b, w) is exist, then I suggest that matrix[a][b] == w
+        a, b may be any unmutable objects
+
+    Complexity: O(n^2) where n - count of vertexes in graph
+
+    Args:
+        matrix (list | dict): matrix of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list: list of edges
+    """
+    if isinstance(matrix, (list, dict)):
+        vertexes = range(len(matrix)) if isinstance(matrix, list) else matrix.keys()
+        lst = []
+        for a in vertexes:
+            for b in vertexes:
+                if matrix[a][b] != -1:
+                    lst.append((a, b, matrix[a][b]))
+        return lst
+    else:
+        raise TypeError('Wrong arguments')
+
+
+def matrixadj_to_listadj(matrix:list| dict) -> list:
+    """
+        This algorithm for creating list of adjacency by matrix of adjacency for unweight graph.
+        If edge (a, b) is exist, I suggest, that matrix[a][b] == 1
+        If edge (a, b) does not exist, I suggest, that matrix[a][b] == 0
+
+    Complexity: O(n^2) where n - count of edges in graph
+
+    Args:
+        matrix (list | dict): matrix of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list: list of adjacency
+    """
+    if isinstance(matrix, (list, dict)):
+        vertexes = range(len(matrix)) if isinstance(matrix, list) else matrix.keys()
+        lst = [[] for i in range(len(vertexes))] if isinstance(matrix, list) else {v: [] for v in vertexes}
+        for a in vertexes:
+            for b in vertexes:
+                if matrix[a][b] == 1:
+                    lst[a].append(b)
+        return lst
+    else:
+        raise TypeError('Wrong arguments')
+
+
+def matrixadj_weight_to_listadj(matrix:list| dict) -> list:
+    """
+        This algorithm for creating list of adjacency by matrix of adjacency for weight graph.
+        If edge (a, b, w) is exist, I suggest, that matrix[a][b] == w
+        If edge (a, b, w) does not exist, I suggest, that matrix[a][b] == -1
+
+    Complexity: O(n^2) where n - count of edges in graph
+
+    Args:
+        matrix (list | dict): matrix of adjacency
+
+    Raises:
+        TypeError: Wrong Arguments
+
+    Returns:
+        list: list of adjacency
+    """
+    if isinstance(matrix, (list, dict)):
+        vertexes = range(len(matrix)) if isinstance(matrix, list) else matrix.keys()
+        lst = [[] for i in range(len(vertexes))] if isinstance(matrix, list) else {v: [] for v in vertexes}
+        for a in vertexes:
+            for b in vertexes:
+                if matrix[a][b] != -1:
+                    lst[a].append((b, matrix[a][b]))
+        return lst
+    else:
+        raise TypeError('Wrong arguments')
 
 
 def get_empty_color(lst:list | dict) -> list | dict:
@@ -740,7 +1024,7 @@ def prims_algorithm_naive(lst:list) -> list:
     if not ( condition_list and condition_element):
         raise TypeError('Wrong arguments')
 
-    adj_lst = get_weightgraph_listadjacency(lst, numbers=condition_numbers)
+    adj_lst = listedge_weight_to_listadj(lst, numbers=condition_numbers)
 
     inf = 1.8446744e+19
     n = len(adj_lst)
@@ -932,11 +1216,21 @@ def kruskals_algorithm(lst:list) -> list:
     return island
 
 
+
+
 __all__ = [
-    'get_graph_listadjacency',
-    'get_graph_matrixadjacency',
-    'get_weightgraph_listadjacency',
-    'get_weightgraph_matrixadjacency',
+    'listadj_to_listedge',
+    'listadj_weight_to_listedge',
+    'listadj_to_matrixadj',
+    'listadj_weight_to_matrixadj',
+    'listedge_to_listadj',
+    'listedge_to_matrixadj',
+    'listedge_weight_to_listadj',
+    'listedge_weight_to_matrixadj',
+    'matrixadj_to_listedge',
+    'matrixadj_weight_to_listedge',
+    'matrixadj_to_listadj',
+    'matrixadj_weight_to_listadj',
     'get_empty_color',
     'graph_dfs',
     'graph_dodfs',

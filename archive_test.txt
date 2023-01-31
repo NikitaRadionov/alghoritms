@@ -1,4 +1,58 @@
-a = [30, 17, 97, 42, 4, 65, 37, 48, 92, 40, 0]
+# a = [(2, 4, 3), (4, 1, 2), (0, 4, 1), (1, 0, 0), (1, 3, 9)]
+# a = [('a', 'b', 1), ('b', 'c', 2), ('c', 'a', 0), ('c', 'd', 5)]
+# a = [('a', 'b'), ('b', 'c'), ('c', 'a'), ('c', 'd')]
+# print(a)
+# print()
+# lstadj = listedge_weight_to_listadj(a, numbers=False)
+# print(lstadj)
+# matrix1 = listadj_weight_to_matrixadj(lstadj)
+# print()
+# for d in matrix1.values():
+#     print(list(d.values()))
+# print()
+
+# matrix2 = listedge_weight_to_matrixadj(a, numbers=False)
+# for d in matrix2.values():
+#     print(list(d.values()))
+# newa = listadj_weight_to_listedge(lstadj)
+# print()
+# print(newa)
+
+
+
+
+# print(matrix)
+# print()
+
+# lstadj1 = listedge_weight_to_listadj(a, numbers=False)
+# print(lstadj1)
+# print()
+# lstadj2 = matrixadj_weight_to_listadj(matrix)
+# print(lstadj2)
+# print()
+
+
+# for element in lstadj2:
+#     print(element)
+
+
+# for line in matrix:
+#     print(line)
+# print(list(matrix.keys()))
+# for d in matrix.values():
+#     print(list(d.values()))
+# print()
+# edges = matrixadj_weight_to_listedge(matrix)
+# print(edges)
+
+
+
+
+
+
+
+
+#a = [30, 17, 97, 42, 4, 65, 37, 48, 92, 40, 0]
 # print(bucketSort(a))
 
 
