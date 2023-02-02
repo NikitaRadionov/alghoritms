@@ -2,8 +2,10 @@ from typing import Any
 from .data_structures import Dsu, CycleFound
 from queue import Queue, PriorityQueue
 
+# Optional:
+# modern Euler cycle
+
 # future:
-# Euler cycle
 # Bridges and articulation points
 # Компоненты сильной связности
 # Пути в ациклических графах
@@ -11,8 +13,6 @@ from queue import Queue, PriorityQueue
 # Dinic
 # mincost flow
 # Floyd
-# list of adjacency -> list of edges
-# list of adjacency -> matrixadjacency
 
 
 def listadj_to_listedge(lst:list | dict) -> list:
@@ -1216,6 +1216,107 @@ def kruskals_algorithm(lst:list) -> list:
     return island
 
 
+def get_euler_cycle(list_of_edges:list, numbers=True) -> str:
+    """
+        This is algorithm for finding Euler cycle in unordered unweight graph.
+        This algorithm returns you right answer if your graph is euler graph
+
+
+    Complexity: O(n + m) where n - count of vertexes
+                               m - count of edges
+
+    Args:
+        lst (list): list of edges
+    Returns:
+        str: Euler cycle
+    """
+
+    def euler(u, lst, visited, first, cycle):
+        while (first[u] < len(lst[u])):
+            p = lst[u][first[u]]
+            i = p[0]
+            v = p[1]
+            if not visited[i]:
+                visited[i] = 1
+                euler(v, lst, visited, first, cycle)
+                cycle.append((v, u))
+                # print(v, u)
+            first[u] += 1
+
+
+    # creating list of adjacency like this:
+    # lst = {
+    #    'a': [(i, 'b'), (j, 'c'), ...]
+    #     ...
+    # }
+    # i - serial number of edge (a, b)
+    def get_work_list(list_of_edges, numbers):
+        work_flow = {}
+        i = -1
+        for edge in list_of_edges:
+            a = edge[0]
+            b = edge[1]
+            if str((b, a)) in list(work_flow.keys()):
+                work_flow[str(edge)] = work_flow[str((b, a))]
+            else:
+                i += 1
+                work_flow[str(edge)] = i
+        if numbers:
+            n = 0
+            for (a, b) in list_of_edges:
+                mx = max(a, b)
+                if mx > n:
+                    n = mx
+            adjlst = [[] for i in range(n + 1)]
+            for (a, b) in list_of_edges:
+                adjlst[a].append((work_flow[str((a, b))], b))
+            return adjlst
+        else:
+            d = {}
+            for (a, b) in list_of_edges:
+                if not (a in d.keys()):
+                    d[a] = []
+                d[a].append((work_flow[str((a, b))], b))
+            return d
+
+
+    lst = get_work_list(list_of_edges, numbers)
+    first = [0 for i in range(len(lst))] if numbers else {v: 0 for v in lst.keys()}
+    visited = [0 for i in range(len(list_of_edges))]
+    start = list_of_edges[0][0]
+    cycle =[]
+    euler(start, lst, visited, first, cycle)
+    string = ""
+    for i in range(len(cycle) - 2, - 2, -1):
+        string += ' -> ' + str(cycle[i + 1][0])
+    return str(start) + string
+
+
+def get_bridge(lst: list | dict):
+
+    def dfs(v, visited, d, h, bridges, p = -1):
+        visited[v] = 1
+        compute = 0 if p == -1 else h[p] + 1
+        d[v] = compute
+        h[v] = compute
+        for u in lst[v]:
+            if u != p:
+                if visited[u]:
+                    d[v] = min(d[v], h[u])
+                else:
+                    dfs(u, visited, d, h, bridges, p=v)
+                    d[v] = min(d[v], d[u])
+                    if h[v] < d[u]:
+                        bridges.append((v, u))
+                        # print(v, u)
+
+    visited = [0 for i in range(len(lst))] if isinstance(lst, list) else {v: 0 for v in lst.keys()}
+    d, h = {}, {}
+    start = 0 if isinstance(lst, list) else list(lst.keys())[0]
+    bridges = []
+    dfs(start, visited, d, h, bridges)
+    return bridges
+
 
 
 __all__ = [
@@ -1245,4 +1346,6 @@ __all__ = [
     'prims_algorithm_optimized_square',
     'prims_algorithm_optimized_log',
     'kruskals_algorithm',
+    'get_euler_cycle',
+    'get_bridge'
 ]

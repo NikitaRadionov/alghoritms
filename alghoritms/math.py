@@ -1,4 +1,5 @@
 from .base_cs import go_to_binary
+from math import sin, cos, atan2
 
 # Optional:
 # Интерполяция многочленов
@@ -194,6 +195,137 @@ def sieve_of_eratosthenes(n:int) -> list:
 #                 break
 #             d[k * x] = x
 
+
+class Pvector:
+
+    def __init__(self, x:int = 0, y:int = 0):
+        self.x = x
+        self.y = y
+
+
+    def __add__(self, v):
+        if isinstance(v, Pvector):
+            return self.__class__(self.x + v.x, self.y + v.y)
+        raise TypeError('You can get sum only two Pvectors')
+
+
+    def __sub__(self, v):
+        if isinstance(v, Pvector):
+            return self.__class__(self.x - v.x, self.y - v.y)
+        raise TypeError('You can get sub only two Pvectors')
+
+
+    def __mul__(self, other):
+        if isinstance(other, int):
+            return self.__class__(self.x * other, self.y * other)
+        if isinstance(other, Pvector):
+            return self.x * other.x + self.y * other.y
+        raise TypeError('You can multiply only Pvector on Prvector and Pvector on int')
+
+
+    def __pow__(self, other) -> int:
+        if isinstance(other, Pvector):
+            return self.x * other.y - self.y * other.x
+        raise TypeError('You can get a vector product only by Pvector ** Pvector')
+
+
+    def angle(self) -> float:
+        return atan2(self.y, self.x)
+
+
+    def angle_between_vectors(self, other) -> float:
+        return atan2(self ** other, self * other)
+
+
+    def lenght(self):
+        return (self.x**2 + self.y**2)**(1/2)
+
+
+    def rotation(self, alpha):
+        x = self.x
+        y = self.y
+        self.x = cos(alpha)*x - sin(alpha)*y
+        self.y = sin(alpha)*x + cos(alpha)*y
+
+
+
+    def __str__(self):
+        # s = 'point' if self.is_point else 'vector'
+        return f'({self.x}, {self.y})'
+
+    __repr__ = __str__
+    __radd__ = __add__
+    __rsub__ = __sub__
+    __rmul__ = __mul__
+
+
+class LineSegment:
+
+    def __init__(self, A:Pvector, B:Pvector):
+        self.A = A
+        self.B = B
+
+    def is_intersect(self, other):
+
+        def direction(p1, p2, p3):
+            return (p3 - p1) ** (p2 - p1)
+
+        def on_segment(p1, p2, p3):
+            return (min(p1.x, p2.x) <= p3.x <= max(p1.x, p2.x)) and (min(p1.y, p2.y) <= p3.y <= max(p1.y, p2.y))
+
+
+        p1, p2, p3, p4 = self.A, self.B, other.A, other.B
+        d1 = direction(p3, p4, p1)
+        d2 = direction(p3, p4, p2)
+        d3 = direction(p1, p2, p3)
+        d4 = direction(p1, p2, p4)
+        if ((d1 > 0 and d2 < 0) or (d1 < 0 and d2 > 0)) and ((d3 > 0 and d4 < 0) or (d3 < 0 and d4 > 0)):
+            return True
+        elif d1 == 0 and on_segment(p3, p4, p1):
+            return True
+        elif d2 == 0 and on_segment(p3, p4, p2):
+            return True
+        elif d3 == 0 and on_segment(p1, p2, p3):
+            return True
+        elif d4 == 0 and on_segment(p1, p2, p4):
+            return True
+        else:
+            return False
+
+
+class Triangle:
+
+    def __init__(self, A:Pvector, B:Pvector, C:Pvector):
+        self.A = A
+        self.B = B
+        self.C = C
+
+    def get_area(self):
+        return abs((1/2) * ((self.B - self.A) ** (self.C - self.A)))
+
+
+
+def get_area_of_polygon_gause_clockwise(lst):
+    # lst[i] - Pvector
+    n = len(lst)
+    sum = 0
+    for i in range(n):
+        sum += lst[i] ** lst[(i + 1) % n]
+    return abs(sum) * (1/2)
+
+
+def get_area_of_polygon_trapezoid_clockwise(lst):
+    n = len(lst)
+    sum = 0
+    for i in range(n):
+        x1 = lst[i].x
+        y1 = lst[i].y
+        x2 = lst[(i + 1) % n].x
+        y2 = lst[(i + 1) % n].y
+        sum += (x2 - x1) * (y2 + y1) / 2
+    return sum
+
+
 __all__ = [
     'pow',
     'horners_rule',
@@ -201,5 +333,10 @@ __all__ = [
     'euclid_extended',
     'modular_linear_solver',
     'modular_exponentiation',
-    'sieve_of_eratosthenes'
+    'sieve_of_eratosthenes',
+    'Pvector',
+    'LineSegment',
+    'Triangle',
+    'get_area_of_polygon_gause_clockwise',
+    'get_area_of_polygon_trapezoid_clockwise'
 ]
