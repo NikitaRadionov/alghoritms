@@ -299,9 +299,15 @@ class Triangle:
         self.A = A
         self.B = B
         self.C = C
+        self.clockwise = ((self.A - self.B) ** (self.C - self.B)) > 0
 
     def get_area(self):
         return abs((1/2) * ((self.B - self.A) ** (self.C - self.A)))
+
+    def is_point_in_triangle(self, P:Pvector):
+        if self.clockwise:
+            return ( (P - self.A) ** (self.B - self.A) >= 0 ) and ( (P - self.B) ** (self.C - self.B) >= 0 ) and ( (P - self.C) ** (self.A - self.C) >= 0 )
+        return ( ((self.B - self.A) ** (P - self.A)) >= 0 ) and ( ((self.C - self.B) ** (P - self.B)) >= 0 ) and ( ((self.A - self.C) ** (P - self.C)) >= 0 )
 
 
 
