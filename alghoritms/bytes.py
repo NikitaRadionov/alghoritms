@@ -90,3 +90,31 @@ def urlb64decode(b:bytes) -> list:
             if len(mod) == 8: # последняя часть учитывается только если она является целым байтом (8 бит)
                 cbytes.append(int(bits[i:], 2))
     return cbytes
+
+def uleb128_encode(i: int) -> list:
+    """
+    Кодирование чисел в формате uleb128
+
+    Args:
+        i (int): обычное число
+
+    Returns:
+        list: список целых чисел представляющих собой
+              последовательность байт, которыми кодируется
+              переданное число
+    """
+    r = []
+    length = 0
+    if i == 0:
+        r = [0]
+        return r
+
+    while i > 0:
+        r.append(0)
+        r[length] = i & 0x7F
+        i >>= 7
+        if i != 0:
+            r[length] |= 0x80
+        length += 1
+
+    return r
